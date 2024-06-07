@@ -5,7 +5,7 @@ const config: Config = {
   rootDir: '.',
   testRegex: '.*\\.spec\\.ts$',
   transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
+    '^.+\\.(t|j)s$': 'ts-jest'
   },
   collectCoverageFrom: ['**/*.(t|j)s'],
   coverageDirectory: '../coverage',
@@ -19,8 +19,8 @@ const config: Config = {
     //   '<rootDir>/photos/$1',
     //   '<rootDir>/recipes/$1',
     // ],
-    '@/(.*)': '<rootDir>/src/$1',
-  },
+    '@/(.*)': '<rootDir>/src/$1'
+  }
 };
 
 export default config;
