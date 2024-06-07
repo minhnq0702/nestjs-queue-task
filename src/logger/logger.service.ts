@@ -17,7 +17,6 @@ export class LoggerService extends Logger {
           level: 'silly',
           format: winston.format.combine(
             winston.format.colorize({
-              level: true,
               all: true,
               colors: { info: 'blue', error: 'red', debug: 'yellow' }
             })
