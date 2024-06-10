@@ -1,4 +1,4 @@
-import { Inject, Module } from '@nestjs/common';
+import { Inject, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
 import { LoggerModule } from 'src/logger/logger.module';
@@ -25,13 +25,11 @@ import { kafkaClientOptions } from './utils';
   ],
   controllers: [KafkaController]
 })
-export class KafkaModule {
+export class KafkaModule implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly logger: LoggerService,
     @Inject('KAFKA_ODOO_TASK') private readonly kafkaClient: ClientKafka
-  ) {
-    this.logger.log('KafkaModule');
-  }
+  ) {}
 
   async onModuleInit() {
     // ! only used for message-response mode. This action will automatically create a new topic with `.reply` suffix
