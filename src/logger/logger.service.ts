@@ -64,7 +64,10 @@ export class LoggerService extends Logger {
     this.log(`Init logger ${context}`);
   }
 
-  log(message: string, context?: string) {
+  log(message: string | object, context?: string) {
+    if (typeof message === 'object') {
+      message = JSON.stringify(message);
+    }
     this.logger.info(message, { context: context ?? this.context });
   }
 
