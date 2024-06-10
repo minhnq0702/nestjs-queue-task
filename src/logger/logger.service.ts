@@ -70,7 +70,7 @@ export class LoggerService extends Logger {
         // }),
       ]
     });
-    this.log(`Init logger ${context}`);
+    this.log(`Init logger instance`, context);
   }
 
   log(message: string | object, context?: string) {
