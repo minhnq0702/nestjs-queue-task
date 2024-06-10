@@ -34,8 +34,9 @@ export class KafkaModule {
   }
 
   async onModuleInit() {
-    // this.kafkaClient.subscribeToResponseOf('dev-test'); // ! only use for message-response mode ?
-    await this.kafkaClient.connect();
+    // ! only used for message-response mode. This action will automatically create a new topic with `.reply` suffix
+    // this.kafkaClient.subscribeToResponseOf('dev-test');
+    // await this.kafkaClient.connect();
     console.debug('>>>>>> INIT KAFKA SERVER CONNECTED <<<<<<');
   }
 
