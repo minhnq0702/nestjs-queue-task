@@ -8,6 +8,7 @@ export class ApiKeyAuthGuard implements CanActivate {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     this.logger.debug('ApiKeyAuthGuard: canActivate() called.');
+    return false;
     return true;
   }
 }
