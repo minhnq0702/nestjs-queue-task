@@ -1,14 +1,15 @@
 import { ConfigService } from '@nestjs/config';
+import { KafkaOptions } from '@nestjs/microservices';
 
-type KafkaClientOptions = {
-  clientId: string;
-  brokers: string[];
-};
-
-export const kafkaClientOptions = (appConfigSvc: ConfigService): KafkaClientOptions => {
+export const kafkaClientOptions = (appConfigSvc: ConfigService): KafkaOptions['options'] => {
   const brokers = appConfigSvc.get('KAFKA_BROKERS').split(',');
   return {
-    clientId: 'kafka-client',
-    brokers
+    client: {
+      clientId: 'kafka-client',
+      brokers
+    },
+    consumer: {
+      groupId: 'kafka-consumer'
+    }
   };
 };
