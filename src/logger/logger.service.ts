@@ -11,7 +11,16 @@ export class LoggerService extends Logger {
     this.context = context;
     this.logger = winston.createLogger({
       level: 'info',
-      format: winston.format.combine(winston.format.timestamp(), winston.format.padLevels(), winston.format.simple()),
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.printf(({ timestamp, level, message, stack, context }) => {
+          return `${timestamp} - [${level.toUpperCase()}]${context ? '[' + context + ']' : ''} ${message} ${stack ? '\n' + stack : ''}`;
+        }),
+        winston.format.errors({ stack: true }),
+        winston.format.splat()
+        // winston.format.padLevels()
+        // winston.format.simple()
+      ),
       transports: [
         new winston.transports.Console({
           level: 'silly',
@@ -71,8 +80,8 @@ export class LoggerService extends Logger {
     this.logger.info(message, { context: context ?? this.context });
   }
 
-  error(message: string, trace: string, context?: string) {
-    this.logger.error(message, { trace, context: context ?? this.context });
+  error(message: string, stack: string, context?: string) {
+    this.logger.error(message, { stack, context: context ?? this.context });
   }
 
   debug(message: string, context?: string) {
