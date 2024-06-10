@@ -1,15 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { ClientKafka } from '@nestjs/microservices';
 import { KafkaController } from './kafka.controller';
 
 describe('KafkaController', () => {
   let controller: KafkaController;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [KafkaController]
-    }).compile();
-
-    controller = module.get<KafkaController>(KafkaController);
+    controller = new KafkaController(new ClientKafka({}));
   });
 
   it('should be defined', () => {
