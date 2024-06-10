@@ -5,7 +5,7 @@ import { ApiKeyAuthGuard } from './api-key-auth.guard';
 import { AuthService } from './auth.service';
 
 @Module({
-  imports: [LoggerModule.register('auth')],
+  imports: [LoggerModule.register('Auth')],
   providers: [
     AuthService,
     {
