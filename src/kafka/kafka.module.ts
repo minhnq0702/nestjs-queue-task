@@ -34,7 +34,7 @@ export class KafkaModule {
   }
 
   async onModuleInit() {
-    this.kafkaClient.subscribeToResponseOf('dev-test'); // TODO move topic to config
+    // this.kafkaClient.subscribeToResponseOf('dev-test'); // ! only use for message-response mode ?
     await this.kafkaClient.connect();
     console.debug('>>>>>> INIT KAFKA SERVER CONNECTED <<<<<<');
   }
