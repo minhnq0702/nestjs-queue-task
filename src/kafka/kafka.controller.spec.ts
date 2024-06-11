@@ -11,4 +11,9 @@ describe('KafkaController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
+
+  // it('should return object', async () => {
+  //   const result = await controller.devTest({} as any, {} as any);
+  //   expect(result).toEqual({ status: 'ok' });
+  // });
 });
