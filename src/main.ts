@@ -9,6 +9,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true
   });
+
+  // * define global prefix
+  app.setGlobalPrefix('/api');
+
   const AppConfig = app.get(ConfigService);
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.KAFKA,
