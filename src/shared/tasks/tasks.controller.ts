@@ -1,7 +1,7 @@
 import { TaskDto } from '@/dto/task.dto';
-import { Task } from '@/entities/task';
+import { Task, TaskDocument } from '@/entities/task.entity';
 import { LoggerService } from '@/logger/logger.service';
-import { Body, Controller, Get, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 
 @Controller('tasks')
@@ -13,7 +13,7 @@ export class TasksController {
   ) {}
 
   @Get()
-  async listTasks(): Promise<Task[]> {
+  async listTasks(): Promise<TaskDocument[]> {
     this.logger.log('Listing tasks');
     return this.tasksService.listTasks();
   }
@@ -27,5 +27,11 @@ export class TasksController {
       args: payload.args,
       kwargs: payload.kwargs
     });
+  }
+
+  @Get(':id')
+  async getTaskById(@Param() id: string): Promise<Task> {
+    this.logger.log('Getting task');
+    return this.tasksService.getTask({ id });
   }
 }
