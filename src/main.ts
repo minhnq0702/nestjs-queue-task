@@ -9,17 +9,21 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true
   });
+  const _logger: LoggerService = app.get(LoggerService);
 
   // * define global prefix
   app.setGlobalPrefix('/api');
 
   const AppConfig = app.get(ConfigService);
+
+  _logger.debug('Starting connect microservice...');
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.KAFKA,
     options: kafkaClientOptions(AppConfig)
   });
-  await app.startAllMicroservices();
-  const _logger: LoggerService = app.get(LoggerService);
+  app.startAllMicroservices();
+  _logger.debug('Complete connect microservice...');
+
   await app.listen(AppConfig.get<string>('PORT') || 3000);
   _logger.log(`Application is running on: ${await app.getUrl()}`);
 }
