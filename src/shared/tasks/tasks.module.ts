@@ -10,7 +10,7 @@ import { TasksService } from './tasks.service';
     MongooseModule.forFeature([{ name: Task.name, schema: TaskSchmea }]),
     LoggerModule.register('Shared/Tasks')
   ],
-  controllers: [TasksController],
-  providers: [TasksService]
+  providers: [TasksService],
+  controllers: [TasksController]
 })
 export class TasksModule {}
