@@ -1,6 +1,6 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
-export class OdooTaskDto {
+export class TaskDto {
   @IsString()
   readonly func: string;
 
@@ -8,10 +8,8 @@ export class OdooTaskDto {
   readonly model: string;
 
   @IsString()
-  @IsOptional()
   readonly args: string;
 
   @IsString()
-  @IsOptional()
   readonly kwargs: string;
 }
