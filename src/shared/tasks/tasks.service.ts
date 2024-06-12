@@ -11,6 +11,7 @@ export class TasksService {
     private readonly logger: LoggerService
   ) {}
 
+  // ? review type Promise<TaskDocument[]>
   async listTasks(): Promise<TaskDocument[]> {
     const res = this.taskModel.find<TaskDocument>();
     return res.exec();
