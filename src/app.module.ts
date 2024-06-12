@@ -16,7 +16,11 @@ import { TasksModule } from './shared/tasks/tasks.module';
     LoggerModule.register('RootApp'), // * add logger for root app
     KafkaModule,
     AuthModule,
-    MongooseModule.forRoot('mongodb://root:root@localhost:27017/', { dbName: 'queued_tasks_dev' }), // TODO move to factory
+    MongooseModule.forRoot('mongodb://localhost:27017/', {
+      dbName: 'queued_tasks_dev',
+      user: 'root',
+      pass: 'root'
+    }), // TODO move to factory
     TasksModule
   ],
   controllers: [AppController],
