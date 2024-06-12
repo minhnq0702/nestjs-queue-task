@@ -2,7 +2,7 @@ import { Task, TaskDocument } from '@/entities/task.entity';
 import { LoggerService } from '@/logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class TasksService {
@@ -22,7 +22,7 @@ export class TasksService {
 
   async getTask({ id }: { id?: string }): Promise<Task> {
     const res = this.taskModel.findOne<Task>({
-      _id: new Types.ObjectId(id)
+      _id: id
     });
 
     this.logger.debug(`Getting task ${res}`);
