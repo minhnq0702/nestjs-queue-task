@@ -34,6 +34,11 @@ import { TasksModule } from './shared/tasks/tasks.module';
       }),
       inject: [ConfigService]
     }),
+    // MongooseModule.forRoot('mongodb://localhost:27017/', {
+    //   dbName: 'dev',
+    //   user: 'root',
+    //   pass: 'root'
+    // }), // * move to factory to inject ConfigService to get env variables
     KafkaModule,
     AuthModule,
     TasksModule
