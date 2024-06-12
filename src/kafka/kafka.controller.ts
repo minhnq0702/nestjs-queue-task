@@ -1,4 +1,4 @@
-import { OdooTaskDto } from '@/dto/odoo-task.dto';
+import { TaskDto } from '@/dto/task.dto';
 import { Controller, Inject, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ClientKafka, Ctx, EventPattern, KafkaContext, Payload } from '@nestjs/microservices';
 import { KafkaFilter } from './kafka.filter';
@@ -10,7 +10,7 @@ export class KafkaController {
   @EventPattern('dev-test') // ! use eventpattern instead of messagepattern for no reply needed
   @UsePipes(new ValidationPipe({ transform: true }))
   @UseFilters(KafkaFilter)
-  async devTest(@Payload() messages: OdooTaskDto, @Ctx() ctx: KafkaContext): Promise<Record<string, string>> {
+  async devTest(@Payload() messages: TaskDto, @Ctx() ctx: KafkaContext): Promise<Record<string, string>> {
     console.log('Received message:', messages);
     const heartbeat = ctx.getHeartbeat();
     await heartbeat();
