@@ -2,6 +2,7 @@ import { AuthModule } from '@/auth/auth.module';
 import { KafkaModule } from '@/kafka/kafka.module';
 import { LoggerModule } from '@/logger/logger.module';
 import { Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -24,13 +25,17 @@ import { TasksModule } from './shared/tasks/tasks.module';
       wildcard: true,
       verboseMemoryLeak: false
     }), // TODO add event emitter for root app. Review configuartion
+    MongooseModule.forRootAsync({
+      useFactory: (config: ConfigService) => ({
+        uri: config.get<string>('DB_URI'),
+        dbName: config.get<string>('DB_NAME'),
+        user: config.get<string>('DB_USER'),
+        pass: config.get<string>('DB_PASSWORD')
+      }),
+      inject: [ConfigService]
+    }),
     KafkaModule,
     AuthModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/', {
-      dbName: 'queued_tasks_dev',
-      user: 'root',
-      pass: 'root'
-    }), // TODO move to factory
     TasksModule
   ],
   controllers: [AppController],
