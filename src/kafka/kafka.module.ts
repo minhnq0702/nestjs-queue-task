@@ -16,11 +16,11 @@ import { kafkaClientOptions } from './utils';
     ConfigService,
     {
       provide: 'KAFKA_ODOO_TASK',
-      useFactory: (configService: ConfigService) => {
-        console.debug('>>>>>> INIT KAFKA SERVER FACTORY <<<<<<');
+      useFactory: (logger: LoggerService, configService: ConfigService) => {
+        logger.debug('>>>>>> INIT KAFKA SERVER FACTORY <<<<<<');
         return new ClientKafka(kafkaClientOptions(configService));
       },
-      inject: [ConfigService]
+      inject: [LoggerService, ConfigService]
     }
   ],
   controllers: [KafkaController]
@@ -35,11 +35,11 @@ export class KafkaModule implements OnModuleInit, OnModuleDestroy {
     // ! only used for message-response mode. This action will automatically create a new topic with `.reply` suffix
     // this.kafkaClient.subscribeToResponseOf('dev-test');
     // await this.kafkaClient.connect();
-    console.debug('>>>>>> INIT KAFKA SERVER CONNECTED <<<<<<');
+    this.logger.debug('>>>>>> INIT KAFKA SERVER CONNECTED <<<<<<');
   }
 
   async onModuleDestroy() {
-    console.debug('>>>>>> INIT KAFKA SERVER DISCONNECTED <<<<<<');
+    this.logger.debug('>>>>>> INIT KAFKA SERVER DISCONNECTED <<<<<<');
     this.kafkaClient.close();
   }
 }
