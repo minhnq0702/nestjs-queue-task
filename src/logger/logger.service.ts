@@ -14,7 +14,7 @@ export class LoggerService extends Logger {
       format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.printf(({ timestamp, level, message, stack, context }) => {
-          return `${timestamp} - [${level.toUpperCase()}]${context ? '[' + context + ']' : ''} ${message} ${stack ? '\n' + stack : ''}`;
+          return `${timestamp} - ${('[' + level.toUpperCase() + ']').padEnd(10)}${context ? ('[' + context + ']').padEnd(20) : ''} ${message} ${stack ? '\n' + stack : ''}`;
         }),
         winston.format.errors({ stack: true }),
         winston.format.splat()

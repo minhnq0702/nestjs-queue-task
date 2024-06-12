@@ -1,11 +1,13 @@
+import { EMIT_CREATE_TASK } from '@/constants';
 import { TaskDto } from '@/dto/task.dto';
 import { Task, TaskDocument } from '@/entities/task.entity';
 import { LoggerService } from '@/logger/logger.service';
 import { Body, Controller, Get, NotFoundException, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
 import { TasksService } from './tasks.service';
 
 @Controller('tasks')
-@UsePipes(new ValidationPipe({ transform: true }))
+@UsePipes(ValidationPipe)
 export class TasksController {
   constructor(
     private readonly logger: LoggerService,
@@ -13,13 +15,13 @@ export class TasksController {
   ) {}
 
   @Get()
-  async listTasks(): Promise<TaskDocument[]> {
+  async ctrlListTasks(): Promise<TaskDocument[]> {
     this.logger.log('Listing tasks');
     return this.tasksService.listTasks();
   }
 
   @Post()
-  async createTasks(@Body() payload: TaskDto): Promise<Task> {
+  async ctrlCreateTasks(@Body() payload: TaskDto): Promise<Task> {
     this.logger.log('Creating tasks');
     return this.tasksService.createTask({
       model: payload.model,
@@ -30,10 +32,9 @@ export class TasksController {
   }
 
   @Get(':id')
-  async getTaskById(@Param('id') id: string): Promise<Task> {
+  async ctrlGetTaskById(@Param('id') id: string): Promise<Task> {
     this.logger.log('Getting task');
     const task = await this.tasksService.getTask({ id });
-    console.log(id);
     if (!task) {
       throw new NotFoundException({
         message: `Task with id ${id.toString()} not found`,
@@ -41,5 +42,11 @@ export class TasksController {
       });
     }
     return task;
+  }
+
+  @OnEvent(EMIT_CREATE_TASK, { async: true })
+  async eventHandleCreateTask(task: Task): Promise<Task> {
+    console.log(`event emitted==> ${JSON.stringify(task)}`);
+    return this.tasksService.createTask(task);
   }
 }
