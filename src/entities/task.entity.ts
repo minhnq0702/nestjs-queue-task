@@ -19,11 +19,11 @@ export class Task extends BaseEntity {
   @Prop()
   func: string;
 
-  @Prop({ default: '' })
-  args: string;
+  @Prop({ default: [] })
+  args: Array<string | number | Array<any>>;
 
-  @Prop({ default: '' })
-  kwargs: string;
+  @Prop({ type: Object, default: {} })
+  kwargs: Record<string | number, string | number | Array<any>>;
 
   @Prop({ default: Date.now })
   createdAt?: Date; // TODO should change to ITask ?
