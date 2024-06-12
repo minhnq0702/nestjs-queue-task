@@ -11,7 +11,8 @@ export class KafkaFilter implements ExceptionFilter {
     await heartbeat();
     const topic = ctx.getTopic();
     const partition = ctx.getPartition();
-    const offset = ctx.getPartition();
+    const msg = ctx.getMessage();
+    const offset = msg.offset;
 
     this.logger.error(
       `Validation error on topic ${topic}, partition ${partition}, offset ${offset}: ${exception.message}`,

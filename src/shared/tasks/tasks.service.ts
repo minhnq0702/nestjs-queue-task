@@ -24,8 +24,6 @@ export class TasksService {
     const res = this.taskModel.findOne<Task>({
       _id: id
     });
-
-    this.logger.debug(`Getting task ${res}`);
     return res.exec();
   }
 }
