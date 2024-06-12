@@ -1,4 +1,4 @@
-import { Task } from '@/entities/task';
+import { Task } from '@/entities/task.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
