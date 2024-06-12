@@ -4,4 +4,7 @@ import { Prop, Schema } from '@nestjs/mongoose';
 export class BaseEntity {
   @Prop({ select: false })
   __v?: number;
+
+  // @Prop()
+  // id?: string;
 }
