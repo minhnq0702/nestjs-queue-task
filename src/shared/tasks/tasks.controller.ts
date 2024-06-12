@@ -44,7 +44,7 @@ export class TasksController {
     return task;
   }
 
-  @OnEvent(EMIT_CREATE_TASK)
+  @OnEvent(EMIT_CREATE_TASK, { async: true })
   async eventHandleCreateTask(task: Task): Promise<Task> {
     console.log(`event emitted==> ${JSON.stringify(task)}`);
     return this.tasksService.createTask(task);
