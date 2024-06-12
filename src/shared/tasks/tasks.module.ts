@@ -1,4 +1,4 @@
-import { Task, TaskSchmea } from '@/entities/task';
+import { Task, TaskSchmea } from '@/entities/task.entity';
 import { LoggerModule } from '@/logger/logger.module';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
