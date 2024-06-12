@@ -1,1 +1,1 @@
-export const EMIT_CREATE_TASK = 'create.task';
+export const EMIT_CREATE_TASK = 'task.do.create';

@@ -2,6 +2,7 @@ import { AuthModule } from '@/auth/auth.module';
 import { KafkaModule } from '@/kafka/kafka.module';
 import { LoggerModule } from '@/logger/logger.module';
 import { Module } from '@nestjs/common';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
 import { appConfig } from './app.config';
@@ -14,6 +15,15 @@ import { TasksModule } from './shared/tasks/tasks.module';
     appConfig(), // * add app config
     ScheduleModule.forRoot(), // * add schedule module for root app, so all cron jobs in childs module can be run
     LoggerModule.register('RootApp'), // * add logger for root app
+    EventEmitterModule.forRoot({
+      delimiter: '.',
+      newListener: false,
+      removeListener: false,
+      ignoreErrors: false,
+      maxListeners: 10,
+      wildcard: true,
+      verboseMemoryLeak: false
+    }), // TODO add event emitter for root app. Review configuartion
     KafkaModule,
     AuthModule,
     MongooseModule.forRoot('mongodb://localhost:27017/', {
