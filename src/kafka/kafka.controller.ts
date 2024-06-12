@@ -4,7 +4,7 @@ import { Task } from '@/entities/task.entity';
 import { Controller, Inject, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ClientKafka, Ctx, EventPattern, KafkaContext, Payload } from '@nestjs/microservices';
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { KafkaFilter } from './kafka.filter';
 
 @Controller('kafka')
@@ -18,9 +18,9 @@ export class KafkaController {
   @UsePipes(ValidationPipe)
   @UseFilters(KafkaFilter)
   async devTest(@Payload() task: TaskDto, @Ctx() ctx: KafkaContext): Promise<Record<string, string>> {
-    const _t = plainToClass(Task, task);
+    const _t = plainToInstance(Task, task);
     const heartbeat = ctx.getHeartbeat();
-    await heartbeat();
+    heartbeat(); // TODO review: should await heartbeat() or not?
 
     // ! Dev testing
     // this.client.emit('dev_1', JSON.stringify({ status: 'ok' }));
