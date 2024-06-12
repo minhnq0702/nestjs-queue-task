@@ -6,6 +6,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 import { LoggerService } from './logger/logger.service';
 
+/** Asynchronous Start microservices */
 async function startMicroservice(app: INestApplication) {
   const _logger: LoggerService = app.get(LoggerService);
   const AppConfig = app.get(ConfigService);
