@@ -1,10 +1,11 @@
 import { kafkaClientOptions } from '@/kafka/utils';
+import { LoggerService } from '@/logger/logger.service';
 import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
-import { LoggerService } from './logger/logger.service';
+import { APP_PORT } from './constants';
 
 /** Asynchronous Start microservices */
 async function startMicroservice(app: INestApplication, _logger: LoggerService) {
@@ -31,7 +32,7 @@ async function bootstrap() {
   const AppConfig = app.get(ConfigService);
   startMicroservice(app, _logger);
 
-  await app.listen(AppConfig.get<string>('PORT') || 3000);
+  await app.listen(AppConfig.get<string>(APP_PORT) || 3000);
   _logger.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
