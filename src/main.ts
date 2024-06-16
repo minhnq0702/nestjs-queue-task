@@ -7,8 +7,7 @@ import { AppModule } from './app.module';
 import { LoggerService } from './logger/logger.service';
 
 /** Asynchronous Start microservices */
-async function startMicroservice(app: INestApplication) {
-  const _logger: LoggerService = app.get(LoggerService);
+async function startMicroservice(app: INestApplication, _logger: LoggerService) {
   const AppConfig = app.get(ConfigService);
 
   _logger.debug('Starting connect microservice...');
@@ -30,7 +29,7 @@ async function bootstrap() {
   app.setGlobalPrefix('/api');
 
   const AppConfig = app.get(ConfigService);
-  startMicroservice(app);
+  startMicroservice(app, _logger);
 
   await app.listen(AppConfig.get<string>('PORT') || 3000);
   _logger.log(`Application is running on: ${await app.getUrl()}`);
