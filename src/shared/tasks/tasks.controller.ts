@@ -45,7 +45,6 @@ export class TasksController {
 
   @Get(':id')
   async ctrlGetTaskById(@Param('id') id: string): Promise<Task> {
-    this.logger.log('Getting task');
     const task = await this.tasksService.getTask({ filterFields: { id } });
     if (!task) {
       throw new NotFoundException({
@@ -65,7 +64,7 @@ export class TasksController {
 
   @OnEvent(EMIT_CREATE_TASK, { async: true })
   async eventHandleCreateTask(task: Task): Promise<Task> {
-    console.log(`event emitted==> ${JSON.stringify(task)}`);
+    this.logger.debug(`event emitted ${JSON.stringify(task)}`);
     return this.tasksService.createTask(task);
   }
 }
