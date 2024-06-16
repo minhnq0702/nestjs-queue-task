@@ -39,7 +39,7 @@ export class KafkaModule implements OnModuleInit, OnModuleDestroy {
   }
 
   async onModuleDestroy() {
-    this.logger.debug('>>>>>> INIT KAFKA SERVER DISCONNECTED <<<<<<');
     this.kafkaClient.close();
+    this.logger.debug('>>>>>> INIT KAFKA SERVER DISCONNECTED <<<<<<');
   }
 }

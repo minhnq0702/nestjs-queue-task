@@ -1,4 +1,4 @@
-import { IsArray, IsObject, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class TaskDto {
   @IsString()
@@ -7,9 +7,12 @@ export class TaskDto {
   @IsString()
   readonly model: string;
 
-  @IsArray()
-  readonly args: Array<string | number | Array<any>>;
+  @IsString()
+  readonly args: string;
 
-  @IsObject()
-  readonly kwargs: Record<string | number, string | number | Array<any>>;
+  @IsString()
+  readonly kwargs: string;
+
+  @IsString()
+  readonly records: string;
 }

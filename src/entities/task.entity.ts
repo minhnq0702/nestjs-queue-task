@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { BaseEntity } from './base.entity';
+import { BaseEntity, BaseOperate } from './base.entity';
 
 export type TaskDocument = HydratedDocument<Task>;
 
@@ -19,11 +19,11 @@ export class Task extends BaseEntity {
   @Prop()
   func: string;
 
-  @Prop({ default: [] })
-  args: Array<string | number | Array<any>>;
+  @Prop({ type: String, default: '[]' })
+  args: string;
 
-  @Prop({ type: Object, default: {} })
-  kwargs: Record<string | number, string | number | Array<any>>;
+  @Prop({ type: String, default: '{}' })
+  kwargs: string;
 
   @Prop({ default: Date.now })
   createdAt?: Date; // TODO should change to ITask ?
@@ -33,6 +33,18 @@ export class Task extends BaseEntity {
 
   @Prop({ default: TaskStateEnum.PENDING })
   state?: TaskStateEnum;
+
+  @Prop({ default: '' })
+  records: string;
 }
 
 export const TaskSchmea = SchemaFactory.createForClass(Task);
+
+export type TaskFilter = {
+  model?: string;
+  func?: string;
+  state?: TaskStateEnum;
+};
+
+// export type TaskOperation = BaseOperate;
+export type TaskOperation = BaseOperate<TaskFilter>;
