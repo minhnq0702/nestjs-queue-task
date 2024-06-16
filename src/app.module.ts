@@ -1,6 +1,7 @@
 import { AuthModule } from '@/auth/auth.module';
 import { KafkaModule } from '@/kafka/kafka.module';
 import { LoggerModule } from '@/logger/logger.module';
+import { TasksModule } from '@/shared/tasks/tasks.module';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -9,7 +10,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { appConfig } from './app.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TasksModule } from './shared/tasks/tasks.module';
+import { DB_CONFIG } from './constants';
 
 @Module({
   imports: [
@@ -27,10 +28,10 @@ import { TasksModule } from './shared/tasks/tasks.module';
     }), // TODO add event emitter for root app. Review configuartion
     MongooseModule.forRootAsync({
       useFactory: (config: ConfigService) => ({
-        uri: config.get<string>('DB_URI'),
-        dbName: config.get<string>('DB_NAME'),
-        user: config.get<string>('DB_USER'),
-        pass: config.get<string>('DB_PASSWORD')
+        uri: config.get<string>(DB_CONFIG.DB_URI),
+        dbName: config.get<string>(DB_CONFIG.DB_NAME),
+        user: config.get<string>(DB_CONFIG.DB_USER),
+        pass: config.get<string>(DB_CONFIG.DB_PASSWORD)
       }),
       inject: [ConfigService]
     }),
