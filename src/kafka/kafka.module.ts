@@ -1,5 +1,5 @@
 import { Inject, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
 import { LoggerModule } from 'src/logger/logger.module';
 import { LoggerService } from 'src/logger/logger.service';
@@ -9,7 +9,7 @@ import { KafkaService } from './kafka.service';
 import { kafkaClientOptions } from './utils';
 
 @Module({
-  imports: [ConfigModule, LoggerModule.register('Kafka')],
+  imports: [LoggerModule.register('Kafka')],
   providers: [
     KafkaCronService,
     KafkaService,
@@ -39,7 +39,7 @@ export class KafkaModule implements OnModuleInit, OnModuleDestroy {
   }
 
   async onModuleDestroy() {
-    this.kafkaClient.close();
+    this.kafkaClient.close(); // ? need ?
     this.logger.debug('>>>>>> INIT KAFKA SERVER DISCONNECTED <<<<<<');
   }
 }
