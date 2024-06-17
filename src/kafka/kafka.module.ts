@@ -4,14 +4,12 @@ import { ClientKafka } from '@nestjs/microservices';
 import { LoggerModule } from 'src/logger/logger.module';
 import { LoggerService } from 'src/logger/logger.service';
 import { KafkaController } from './kafka.controller';
-import { KafkaCronService } from './kafka.cron';
 import { KafkaService } from './kafka.service';
 import { kafkaClientOptions } from './utils';
 
 @Module({
   imports: [LoggerModule.register('Kafka')],
   providers: [
-    KafkaCronService,
     KafkaService,
     ConfigService,
     {
