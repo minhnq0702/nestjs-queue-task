@@ -1,14 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { BaseEntity } from './base.entity';
+import { BaseEntity, BaseOperate } from './base.entity';
 
 export type TaskDocument = HydratedDocument<Task>;
 
 export enum TaskStateEnum {
+  DRAFT = 'DRAFT',
   PENDING = 'PENDING',
+  QUEUED = 'QUEUED',
   STARTED = 'STARTED',
   SUCCESS = 'SUCCESS',
-  FAILURE = 'FAILURE'
+  FAILED = 'FAILED'
 }
 
 @Schema()
@@ -19,11 +21,11 @@ export class Task extends BaseEntity {
   @Prop()
   func: string;
 
-  @Prop({ default: [] })
-  args: Array<string | number | Array<any>>;
+  @Prop({ type: String, default: '[]' })
+  args: string;
 
-  @Prop({ type: Object, default: {} })
-  kwargs: Record<string | number, string | number | Array<any>>;
+  @Prop({ type: String, default: '{}' })
+  kwargs: string;
 
   @Prop({ default: Date.now })
   createdAt?: Date; // TODO should change to ITask ?
@@ -31,8 +33,23 @@ export class Task extends BaseEntity {
   @Prop({ default: Date.now })
   updatedAt?: Date; // TODO should change to ITask ?
 
-  @Prop({ default: TaskStateEnum.PENDING })
+  @Prop({ default: TaskStateEnum.DRAFT })
   state?: TaskStateEnum;
+
+  @Prop({ default: '' })
+  records: string;
+
+  @Prop()
+  jobId?: string;
 }
 
 export const TaskSchmea = SchemaFactory.createForClass(Task);
+
+export type TaskFilter = {
+  model?: string;
+  func?: string;
+  state?: TaskStateEnum;
+};
+
+// export type TaskOperation = BaseOperate;
+export type TaskOperation = BaseOperate<TaskFilter>;
