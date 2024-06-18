@@ -4,6 +4,12 @@ import { Prop, Schema } from '@nestjs/mongoose';
 export class BaseEntity {
   @Prop({ select: false })
   __v?: number;
+
+  @Prop({ default: Date.now })
+  createdAt?: Date;
+
+  @Prop({ default: Date.now })
+  updatedAt?: Date;
 }
 
 export type BaseFilter<T> = {

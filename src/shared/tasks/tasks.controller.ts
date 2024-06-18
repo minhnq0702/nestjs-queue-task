@@ -17,13 +17,11 @@ export class TasksController {
 
   @Get()
   async ctrlListTasks(): Promise<Task[]> {
-    this.logger.log('Listing tasks');
     return this.tasksService.listTasks({ filterFields: {} });
   }
 
   @Post()
-  async ctrlCreateTasks(@Body() payload: TaskDto): Promise<Task> {
-    this.logger.log('Creating tasks');
+  async ctrlCreateTask(@Body() payload: TaskDto): Promise<Task> {
     return this.tasksService.createTask({
       model: payload.model,
       func: payload.func,
