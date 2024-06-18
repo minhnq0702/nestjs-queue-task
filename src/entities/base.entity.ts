@@ -14,7 +14,9 @@ export type BaseSort = Record<string, number>;
 
 export type BaseOperate<T> = {
   filterFields: BaseFilter<T>;
+  updateFields?: Record<string, any>; // ? should change to Partial<T>
   sortFields?: Record<string, number>;
+  limit?: number | null;
 };
 
 export const GetDomain = <T>(options: BaseFilter<T>) => {
