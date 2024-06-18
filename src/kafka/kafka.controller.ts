@@ -5,16 +5,17 @@ import { Controller, Inject, UseFilters, UsePipes, ValidationPipe } from '@nestj
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ClientKafka, Ctx, EventPattern, KafkaContext, Payload } from '@nestjs/microservices';
 import { plainToInstance } from 'class-transformer';
+import { KAFKA_CLIENT_REF, KAFKA_ODOO_TOPIC } from './constant';
 import { KafkaFilter } from './kafka.filter';
 
 @Controller('kafka')
 export class KafkaController {
   constructor(
-    @Inject('KAFKA_ODOO_TASK') private readonly client: ClientKafka,
+    @Inject(KAFKA_CLIENT_REF) private readonly client: ClientKafka,
     private emitEvent: EventEmitter2
   ) {}
 
-  @EventPattern('dev-test') // ! use eventpattern instead of messagepattern for no reply needed
+  @EventPattern(KAFKA_ODOO_TOPIC) // ! use eventpattern instead of messagepattern for no reply needed
   @UsePipes(ValidationPipe)
   @UseFilters(KafkaFilter)
   async devTest(@Payload() task: TaskDto, @Ctx() ctx: KafkaContext): Promise<Record<string, string>> {
