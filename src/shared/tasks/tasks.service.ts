@@ -59,9 +59,13 @@ export class TasksService {
   /** Execute task: Request to external service to execute queued task (Odoo, etc..) */
   async executeTaskDirectly({ filterFields }: TaskOperation): Promise<Task> {
     const domain = GetDomain(filterFields);
-    const res = this.taskModel.findOne<Task>(domain);
-    res.where('state', TaskStateEnum.PENDING);
-    return res.exec().then((task: TaskDocument) => {
+    // * Only allow find and execute task with state DRAFT
+    const res = this.taskModel.findOne<Task>({
+      ...domain,
+      state: TaskStateEnum.DRAFT
+    });
+
+    return res.exec().then(async (task: TaskDocument) => {
       if (!task) {
         throw new TaskNotFound();
       }
