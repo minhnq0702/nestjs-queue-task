@@ -48,10 +48,12 @@ export default class AllExceptionFilter implements ExceptionFilter {
       code,
       error,
       message,
-      timestamp: new Date().toISOString(),
-      // path: httpAdapter.getRequestUrl(ctx.getRequest()),
-      additional
+      timestamp: new Date().toISOString()
+      // path: httpAdapter.getRequestUrl(ctx.getRequest())
     };
+    if (additional !== null) {
+      responseBody['additional'] = additional;
+    }
 
     httpAdapter.reply(ctx.getResponse(), responseBody, statusCode);
   }
