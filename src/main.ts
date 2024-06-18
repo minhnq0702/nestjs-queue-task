@@ -1,8 +1,9 @@
+import AllExceptionFilter from '@/common/http.exception.filter';
 import { kafkaClientOptions } from '@/kafka/utils';
 import { LoggerService } from '@/logger/logger.service';
 import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 import { APP_PORT } from './constants';
@@ -25,6 +26,9 @@ async function bootstrap() {
     bufferLogs: true
   });
   const _logger: LoggerService = app.get(LoggerService);
+
+  const adapter = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new AllExceptionFilter(adapter, app.get(LoggerService)));
 
   // * define global prefix
   app.setGlobalPrefix('/api');

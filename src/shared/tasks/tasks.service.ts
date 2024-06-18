@@ -1,5 +1,6 @@
 import { ODOO_CONFIG } from '@/constants';
 import { GetDomain } from '@/entities/base.entity';
+import { TaskNotFound } from '@/entities/error.entity';
 import { Task, TaskDocument, TaskOperation, TaskStateEnum } from '@/entities/task.entity';
 import { OdooService } from '@/external/odoo/odoo.service';
 import { LoggerService } from '@/logger/logger.service';
@@ -62,7 +63,8 @@ export class TasksService {
     res.where('state', TaskStateEnum.PENDING);
     return res.exec().then((task: TaskDocument) => {
       if (!task) {
-        throw new Error('Task not found');
+        throw new Error();
+        throw new TaskNotFound();
       }
       this.logger.debug(`# TODO: Execute task ${task._id}`);
       // Array.from({ length: 1000000 }).forEach(() => {

@@ -1,19 +1,9 @@
 import { EMIT_CREATE_TASK } from '@/constants';
 import { TaskDto } from '@/dto/task.dto';
+import { TaskNotFound } from '@/entities/error.entity';
 import { Task } from '@/entities/task.entity';
 import { LoggerService } from '@/logger/logger.service';
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  NotFoundException,
-  Param,
-  Post,
-  UsePipes,
-  ValidationPipe
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { TasksService } from './tasks.service';
 
@@ -47,10 +37,12 @@ export class TasksController {
   async ctrlGetTaskById(@Param('id') id: string): Promise<Task> {
     const task = await this.tasksService.getTask({ filterFields: { id } });
     if (!task) {
-      throw new NotFoundException({
-        message: `Task with id ${id.toString()} not found`,
-        code: 'TASK_NOT_FOUND'
-      });
+      throw new TaskNotFound(`Task with id ${id.toString()} not found`);
+      // })
+      // throw new NotFoundException({
+      //   message: `Task with id ${id.toString()} not found`,
+      //   code: 'TASK_NOT_FOUND'
+      // });
     }
     return task;
   }

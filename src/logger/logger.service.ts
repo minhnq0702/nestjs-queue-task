@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import * as util from 'util';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 
@@ -13,8 +14,11 @@ export class LoggerService extends Logger {
       level: 'info',
       format: winston.format.combine(
         winston.format.timestamp(),
+        // winston.format.printf(({ timestamp, level, message, stack, context, ...metadata }) => {
         winston.format.printf(({ timestamp, level, message, stack, context }) => {
-          return `${timestamp} - ${('[' + level.toUpperCase() + ']').padEnd(10)}${context ? ('[' + context + ']').padEnd(20) : ''} ${message} ${stack ? '\n' + stack : ''}`;
+          // const _message = util.format(message, ...(metadata[Symbol.for('splat')] || []));
+          const _message = util.format(message);
+          return `${timestamp} - ${('[' + level.toUpperCase() + ']').padEnd(10)}${context ? ('[' + context + ']').padEnd(20) : ''} ${_message} ${stack ? '\n' + stack : ''}`;
         }),
         winston.format.errors({ stack: true }),
         winston.format.splat()
@@ -80,8 +84,8 @@ export class LoggerService extends Logger {
     this.logger.info(message, { context: context ?? this.context });
   }
 
-  error(message: string, stack: string, context?: string) {
-    this.logger.error(message, { stack, context: context ?? this.context });
+  error(message: string, stack?: string, context?: string, ...metadata: any[]) {
+    this.logger.error(message, { stack, context: context ?? this.context }, ...metadata);
   }
 
   debug(message: string, context?: string) {
