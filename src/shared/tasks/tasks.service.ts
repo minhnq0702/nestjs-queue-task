@@ -4,11 +4,9 @@ import { TaskNotFound } from '@/entities/error.entity';
 import { Task, TaskDocument, TaskOperation, TaskStateEnum } from '@/entities/task.entity';
 import { OdooService } from '@/external/odoo/odoo.service';
 import { LoggerService } from '@/logger/logger.service';
-import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
-import { Queue } from 'bull';
 import { Model } from 'mongoose';
 
 @Injectable()
@@ -17,7 +15,7 @@ export class TasksService {
     @InjectModel(Task.name) private taskModel: Model<Task>,
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
-    @InjectQueue(process.env.ODOO_QUEUE_TASK_CHANNEL) private taskQueue: Queue,
+    // @InjectQueue(process.env.ODOO_QUEUE_TASK_CHANNEL) private taskQueue: Queue,
     private readonly odooService: OdooService // ? should change to externalService and use Odoo as a functional service
   ) {}
 

@@ -1,8 +1,9 @@
+import { LoggerModule } from '@/logger/logger.module';
+import { LoggerService } from '@/logger/logger.service';
 import { Inject, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientKafka } from '@nestjs/microservices';
-import { LoggerModule } from 'src/logger/logger.module';
-import { LoggerService } from 'src/logger/logger.service';
+import { KAFKA_CLIENT_REF } from './constant';
 import { KafkaController } from './kafka.controller';
 import { KafkaService } from './kafka.service';
 import { kafkaClientOptions } from './utils';
@@ -13,7 +14,7 @@ import { kafkaClientOptions } from './utils';
     KafkaService,
     ConfigService,
     {
-      provide: 'KAFKA_ODOO_TASK',
+      provide: KAFKA_CLIENT_REF,
       useFactory: (logger: LoggerService, configService: ConfigService) => {
         logger.debug('>>>>>> INIT KAFKA SERVER FACTORY <<<<<<');
         return new ClientKafka(kafkaClientOptions(configService));
@@ -26,7 +27,7 @@ import { kafkaClientOptions } from './utils';
 export class KafkaModule implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly logger: LoggerService,
-    @Inject('KAFKA_ODOO_TASK') private readonly kafkaClient: ClientKafka
+    @Inject(KAFKA_CLIENT_REF) private readonly kafkaClient: ClientKafka
   ) {}
 
   async onModuleInit() {

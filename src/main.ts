@@ -1,3 +1,6 @@
+import { config } from 'dotenv';
+config({ path: ['.env.local', '.env'] });
+
 import AllExceptionFilter from '@/common/http.exception.filter';
 import { kafkaClientOptions } from '@/kafka/utils';
 import { LoggerService } from '@/logger/logger.service';

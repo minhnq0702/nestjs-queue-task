@@ -1,6 +1,7 @@
 import { AuthModule } from '@/auth/auth.module';
 import { KafkaModule } from '@/kafka/kafka.module';
 import { LoggerModule } from '@/logger/logger.module';
+import { MessagesModule } from '@/shared/messages/messages.module';
 import { TasksModule } from '@/shared/tasks/tasks.module';
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
@@ -59,7 +60,8 @@ import { DB_CONFIG } from './constants';
     // }),
     KafkaModule,
     AuthModule,
-    TasksModule
+    TasksModule,
+    MessagesModule
   ],
   controllers: [AppController],
   providers: [AppService]

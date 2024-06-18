@@ -15,10 +15,18 @@ export class MyException extends Error {
   }
 }
 
-export class TaskNotFound extends MyException {
+export class NotFound extends MyException {
   httpStatus = STATUS.NOT_FOUND;
-  code = 404;
+  code = this.httpStatus;
+  error = 'NOT_FOUND';
+}
+
+export class TaskNotFound extends MyException {
   error = 'TASK_NOT_FOUND';
+}
+
+export class MsgNotFound extends MyException {
+  error = 'MSG_NOT_FOUND';
 }
 
 export class Conflict extends MyException {
