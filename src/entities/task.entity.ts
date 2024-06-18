@@ -5,11 +5,12 @@ import { BaseEntity, BaseOperate } from './base.entity';
 export type TaskDocument = HydratedDocument<Task>;
 
 export enum TaskStateEnum {
+  DRAFT = 'DRAFT',
   PENDING = 'PENDING',
   QUEUED = 'QUEUED',
   STARTED = 'STARTED',
   SUCCESS = 'SUCCESS',
-  FAILURE = 'FAILURE'
+  FAILED = 'FAILED'
 }
 
 @Schema()
@@ -32,11 +33,14 @@ export class Task extends BaseEntity {
   @Prop({ default: Date.now })
   updatedAt?: Date; // TODO should change to ITask ?
 
-  @Prop({ default: TaskStateEnum.PENDING })
+  @Prop({ default: TaskStateEnum.DRAFT })
   state?: TaskStateEnum;
 
   @Prop({ default: '' })
   records: string;
+
+  @Prop()
+  jobId?: string;
 }
 
 export const TaskSchmea = SchemaFactory.createForClass(Task);

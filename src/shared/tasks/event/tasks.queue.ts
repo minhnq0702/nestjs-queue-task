@@ -66,11 +66,15 @@ export class TaskQueueProcessor {
 
   @OnQueueDrained()
   async onAllJobTask() {
-    this.logger.log('Job delayed');
+    this.logger.log('Job Queue released');
   }
 
   @OnQueueFailed()
   async onFailedTask(job: Job<OdooDoingTaskParams>, error: Error) {
     this.logger.error(`Job failed ${job.id} - ${error.message}`, error.stack);
+    this.taskService.updateTask({
+      filterFields: { id: job.data.dbId },
+      updateFields: { state: TaskStateEnum.FAILED }
+    });
   }
 }

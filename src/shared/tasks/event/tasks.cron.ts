@@ -16,32 +16,39 @@ export class TaskCronService {
     private readonly taskService: TasksService
   ) {}
 
-  @Cron(CronExpression.EVERY_5_SECONDS)
+  @Cron(CronExpression.EVERY_10_SECONDS)
   async cronTaskExecute() {
     this.logger.debug(`[${process.pid}] CRON DO SOMETHING`);
     const tasksToDo = await this.taskService.listTasks({
       filterFields: {
-        state: TaskStateEnum.PENDING
+        state: TaskStateEnum.DRAFT
       },
-      limit: 100
+      limit: 20
     });
     // console.log('READY?', await this.taskQueue.isReady());
     // if (!(await this.taskQueue.isReady())) {
     //   return;
     // }
     tasksToDo.forEach((task) => {
-      this.taskQueue.add({
-        dbId: task._id.toString(),
-        url: this.config.get(ODOO_CONFIG.ODOO_URL),
-        db: this.config.get(ODOO_CONFIG.ODOO_DB),
-        user: this.config.get(ODOO_CONFIG.ODOO_HTTP_USER) || null,
-        pass: this.config.get(ODOO_CONFIG.ODOO_HTTP_PASSWORD) || null,
-        model: task.model,
-        func: task.func,
-        args: task.args,
-        kwargs: task.kwargs,
-        records: task.records
-      });
+      this.taskQueue
+        .add({
+          dbId: task._id.toString(),
+          url: this.config.get(ODOO_CONFIG.ODOO_URL),
+          db: this.config.get(ODOO_CONFIG.ODOO_DB),
+          user: this.config.get(ODOO_CONFIG.ODOO_HTTP_USER) || null,
+          pass: this.config.get(ODOO_CONFIG.ODOO_HTTP_PASSWORD) || null,
+          model: task.model,
+          func: task.func,
+          args: task.args,
+          kwargs: task.kwargs,
+          records: task.records
+        })
+        .then((job) => {
+          this.taskService.updateTask({
+            filterFields: { id: task._id.toString() },
+            updateFields: { state: TaskStateEnum.PENDING, jobId: job.id }
+          });
+        });
     });
   }
 }
