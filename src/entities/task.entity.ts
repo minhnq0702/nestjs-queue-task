@@ -6,6 +6,7 @@ export type TaskDocument = HydratedDocument<Task>;
 
 export enum TaskStateEnum {
   PENDING = 'PENDING',
+  QUEUED = 'QUEUED',
   STARTED = 'STARTED',
   SUCCESS = 'SUCCESS',
   FAILURE = 'FAILURE'
