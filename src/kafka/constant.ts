@@ -1,0 +1,2 @@
+export const KAFKA_CLIENT_REF = 'KAFKA_CLIENT_REF';
+export const KAFKA_ODOO_TOPIC = process.env.ODOO_KAFKA_TASK_TOPIC;

@@ -1,6 +1,7 @@
 import { OdooDoingTaskParams } from '@/dto/odoo.doing.task.dto';
 import { TaskStateEnum } from '@/entities/task.entity';
 import { LoggerService } from '@/logger/logger.service';
+import { ODOO_QUEUE_TASK_CHANNEL } from '@/shared/tasks/constants';
 import {
   InjectQueue,
   OnQueueActive,
@@ -13,11 +14,11 @@ import {
 import { Job, Queue } from 'bull';
 import { TasksService } from '../tasks.service';
 
-@Processor(process.env.ODOO_QUEUE_TASK_CHANNEL)
+@Processor(ODOO_QUEUE_TASK_CHANNEL)
 export class TaskQueueProcessor {
   constructor(
     private readonly logger: LoggerService,
-    @InjectQueue(process.env.ODOO_QUEUE_TASK_CHANNEL) private taskQueue: Queue,
+    @InjectQueue(ODOO_QUEUE_TASK_CHANNEL) private taskQueue: Queue,
     private readonly taskService: TasksService
   ) {}
 
