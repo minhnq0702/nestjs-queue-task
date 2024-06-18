@@ -63,28 +63,9 @@ export class TasksService {
     res.where('state', TaskStateEnum.PENDING);
     return res.exec().then((task: TaskDocument) => {
       if (!task) {
-        throw new Error();
         throw new TaskNotFound();
       }
       this.logger.debug(`# TODO: Execute task ${task._id}`);
-      // Array.from({ length: 1000000 }).forEach(() => {
-      //   this.taskQueue.add(
-      //     {
-      //       url: this.config.get(ODOO_CONFIG.ODOO_URL),
-      //       db: this.config.get(ODOO_CONFIG.ODOO_DB),
-      //       user: this.config.get(ODOO_CONFIG.ODOO_HTTP_USER) || null,
-      //       pass: this.config.get(ODOO_CONFIG.ODOO_HTTP_PASSWORD) || null,
-      //       model: task.model,
-      //       func: task.func,
-      //       records: task.records,
-      //       args: task.args,
-      //       kwargs: task.kwargs
-      //     },
-      //     {
-      //       delay: 0
-      //     }
-      //   );
-      // });
       return this.odooService
         .callDoingTask({
           dbId: task._id.toString(),

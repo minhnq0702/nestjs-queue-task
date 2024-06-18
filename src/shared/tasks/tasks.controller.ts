@@ -38,11 +38,6 @@ export class TasksController {
     const task = await this.tasksService.getTask({ filterFields: { id } });
     if (!task) {
       throw new TaskNotFound(`Task with id ${id.toString()} not found`);
-      // })
-      // throw new NotFoundException({
-      //   message: `Task with id ${id.toString()} not found`,
-      //   code: 'TASK_NOT_FOUND'
-      // });
     }
     return task;
   }
