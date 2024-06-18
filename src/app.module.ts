@@ -2,6 +2,7 @@ import { AuthModule } from '@/auth/auth.module';
 import { KafkaModule } from '@/kafka/kafka.module';
 import { LoggerModule } from '@/logger/logger.module';
 import { TasksModule } from '@/shared/tasks/tasks.module';
+import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -27,7 +28,7 @@ import { DB_CONFIG } from './constants';
       verboseMemoryLeak: false
     }), // TODO add event emitter for root app. Review configuartion
     MongooseModule.forRootAsync({
-      useFactory: (config: ConfigService) => ({
+      useFactory: async (config: ConfigService) => ({
         uri: config.get<string>(DB_CONFIG.DB_URI),
         dbName: config.get<string>(DB_CONFIG.DB_NAME),
         user: config.get<string>(DB_CONFIG.DB_USER),
@@ -40,6 +41,22 @@ import { DB_CONFIG } from './constants';
     //   user: 'root',
     //   pass: 'root'
     // }), // * move to factory to inject ConfigService to get env variables
+    // TODO: check more configuration for bull module
+    BullModule.forRootAsync({
+      useFactory: async (config: ConfigService) => ({
+        redis: {
+          host: config.get<string>('BULL_REDIS_HOST') || 'localhost',
+          port: config.get<number>('BULL_REDIS_PORT') || 6379
+        }
+      }),
+      inject: [ConfigService]
+    }),
+    // BullModule.forRoot({
+    //   redis: {
+    //     host: 'localhost',
+    //     port: 6379
+    //   }
+    // }),
     KafkaModule,
     AuthModule,
     TasksModule
