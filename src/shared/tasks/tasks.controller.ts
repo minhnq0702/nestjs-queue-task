@@ -1,6 +1,6 @@
 import { EMIT_CREATE_TASK } from '@/constants';
 import { TaskDto } from '@/dto/task.dto';
-import { Task, TaskDocument } from '@/entities/task.entity';
+import { Task } from '@/entities/task.entity';
 import { LoggerService } from '@/logger/logger.service';
 import {
   Body,
@@ -26,9 +26,9 @@ export class TasksController {
   ) {}
 
   @Get()
-  async ctrlListTasks(): Promise<TaskDocument[]> {
+  async ctrlListTasks(): Promise<Task[]> {
     this.logger.log('Listing tasks');
-    return this.tasksService.listTasks();
+    return this.tasksService.listTasks({ filterFields: {} });
   }
 
   @Post()
@@ -59,7 +59,7 @@ export class TasksController {
   @HttpCode(HttpStatus.ACCEPTED)
   async ctrlExecuteTaskById(@Param('id') id: string): Promise<Task> {
     this.logger.log(`Executing task ${id}`);
-    return await this.tasksService.executeTask({ filterFields: { id } });
+    return await this.tasksService.executeTaskDirectly({ filterFields: { id } });
   }
 
   @OnEvent(EMIT_CREATE_TASK, { async: true })

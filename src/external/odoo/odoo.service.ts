@@ -1,23 +1,12 @@
+import { OdooDoingTaskParams } from '@/dto/odoo.doing.task.dto';
 import { LoggerService } from '@/logger/logger.service';
 import { Injectable } from '@nestjs/common';
-
-type OdooDoingTaskParams = {
-  url: string;
-  db: string;
-  user: string;
-  pass: string;
-  model: string;
-  func: string;
-  records: string;
-  args: string;
-  kwargs: string;
-};
 
 @Injectable()
 export class OdooService {
   constructor(private readonly logger: LoggerService) {}
 
-  callDoingTask(taskParams: OdooDoingTaskParams) {
+  async callDoingTask(taskParams: OdooDoingTaskParams) {
     this.logger.debug(`
     Doing task:
       \t- url: ${taskParams.url}
@@ -30,7 +19,7 @@ export class OdooService {
       \t- kwargs: ${taskParams.kwargs}
     `);
     const url = `${taskParams.url}?db=${taskParams.db}`;
-    fetch(`${url}`, {
+    return fetch(`${url}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -42,13 +31,10 @@ export class OdooService {
         args: taskParams.args,
         kwargs: taskParams.kwargs
       })
-    })
-      .then((res) => {
-        this.logger.debug(`Response: ${res}`);
-        return res.text();
-      })
-      .then((text) => {
-        this.logger.debug(`Text: ${text}`);
-      });
+    }).then((res) => {
+      this.logger.debug(`Response: ${res.status} ${res.statusText}`);
+      // TODO: fix handle error
+      return res.text();
+    });
   }
 }
