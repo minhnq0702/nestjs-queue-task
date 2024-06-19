@@ -16,14 +16,15 @@ export class BaseEntity {
 }
 
 export type BaseFilter<T> = {
-  id?: string;
+  id?: string | Record<'$in', any>;
 } & T;
 
 export type BaseSort = Record<string, number>;
 
-export type BaseOperate<T> = {
+export type BaseOperate<T, U> = {
   filterFields: BaseFilter<T>;
-  updateFields?: Record<string, any>; // ? should change to Partial<T>
+  // updateFields?: U & Record<string, any>; // ? should change to Partial<T>
+  updateFields?: U;
   sortFields?: Record<string, number>;
   limit?: number | null;
 };

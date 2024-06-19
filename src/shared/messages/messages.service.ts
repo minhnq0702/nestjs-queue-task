@@ -15,9 +15,9 @@ export class MessagesService {
     private readonly logger: LoggerService
   ) {}
 
-  async listMsgs({ filterFields, limit = null }: MessageOperation): Promise<MessageDocument[]> {
+  async listMsgs<T extends Message | Message>({ filterFields, limit = null }: MessageOperation): Promise<T[]> {
     const domain = GetDomain(filterFields);
-    const res = this.msgModel.find<MessageDocument>(domain);
+    const res = this.msgModel.find<T>(domain);
     res.sort({ createdAt: -1 }); // TODO add sort params
     if (limit) {
       res.limit(limit);
@@ -36,43 +36,75 @@ export class MessagesService {
     return res.exec();
   }
 
-  async updateTask({ filterFields, updateFields }: MessageOperation): Promise<MessageDocument> {
+  async updateMsgs({ filterFields, updateFields }: MessageOperation): Promise<number> {
     const domain = GetDomain(filterFields);
-    const res = this.msgModel.findOneAndUpdate<MessageDocument>(
-      domain,
-      {
-        ...updateFields,
-        updatedAt: new Date()
-      },
-      { new: true }
-    );
-    return res.exec();
+    const res = this.msgModel.updateMany<MessageDocument>(domain, {
+      ...updateFields,
+      $currentDate: {
+        lastModified: true,
+        updatedAt: { $type: 'date' }
+      }
+    });
+    return res
+      .exec()
+      .then((res) => {
+        return res.modifiedCount;
+        // return this.getMsg({ filterFields });
+      })
+      .catch((err) => {
+        this.logger.error(`Error updateMsgs ${err}`);
+        // throw new Error(err);
+        return 0;
+      });
   }
 
-  async sendMessageDirectly({ filterFields }: MessageOperation): Promise<Message> {
-    const domain = GetDomain(filterFields);
-    // * Only allow find and execute task with state DRAFT
-    const res = this.msgModel.findOne<MessageDocument>({
-      ...domain,
-      state: MessageStateEnum.DRAFT
-    });
+  async sendMessageDirectly(
+    { filterFields }: MessageOperation,
+    toSendMsg: null | MessageDocument = null,
+    isThrow = true
+  ): Promise<Message> {
+    if (!toSendMsg) {
+      const domain = GetDomain(filterFields);
+      // * Only allow find and execute task with state DRAFT
+      const res = this.msgModel.findOne<MessageDocument>({
+        ...domain
+        // state: MessageStateEnum.DRAFT
+      });
 
-    const msg = await res.exec();
-    if (!msg) {
-      throw new MsgNotFound(`Message with id ${filterFields.id} not found`);
+      const toSendMsg = await res.exec();
+      if (!toSendMsg) {
+        if (!isThrow) {
+          return null;
+        }
+        throw new MsgNotFound(`Message with id ${filterFields.id} not found`);
+      }
     }
     return this.twilioService
       .sendSms({
-        body: msg.content,
-        to: msg.receiver,
-        from: msg.sender
+        body: toSendMsg.content,
+        to: toSendMsg.receiver,
+        from: toSendMsg.sender
       })
-      .then(() => {
-        return msg;
+      .then((sid) => {
+        this.updateMsgs({
+          filterFields: { id: toSendMsg.id },
+          updateFields: { state: MessageStateEnum.QUEUED, providerId: sid }
+        });
+        return toSendMsg;
       })
       .catch((err) => {
-        throw new Error(err);
+        this.updateMsgs({
+          filterFields: { id: toSendMsg.id },
+          updateFields: {
+            state: MessageStateEnum.FAILED,
+            failReason: err
+          }
+        });
+        if (isThrow) {
+          throw new Error(err);
+        } else {
+          return toSendMsg;
+        }
       });
-    // return msg;
   }
 }

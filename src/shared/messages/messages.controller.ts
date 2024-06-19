@@ -10,17 +10,25 @@ import { MessagesService } from './messages.service';
 export class MessagesController {
   constructor(
     private readonly logger: LoggerService,
-    private readonly msgService: MessagesService
+    private readonly msgSvc: MessagesService
   ) {}
 
   @Get()
   async ctrlListMsgs(): Promise<Message[]> {
-    return this.msgService.listMsgs({ filterFields: {} });
+    return this.msgSvc.listMsgs({ filterFields: {} });
   }
 
   @Post()
   async ctrlCreateMessage(@Body() payload: MessageDto): Promise<Message> {
-    return this.msgService.createMsg({
+    Array.from({ length: 10000 }, (_, i) => {
+      this.msgSvc.createMsg({
+        content: payload.content,
+        sender: payload.sender,
+        receiver: payload.receiver
+      });
+      this.logger.debug(`Creating message ${i + 1}`);
+    });
+    return this.msgSvc.createMsg({
       content: payload.content,
       sender: payload.sender,
       receiver: payload.receiver
@@ -29,7 +37,7 @@ export class MessagesController {
 
   @Get(':id')
   async ctrlGetMessagekById(@Param('id') id: string): Promise<Message> {
-    const msg = await this.msgService.getMsg({ filterFields: { id } });
+    const msg = await this.msgSvc.getMsg({ filterFields: { id } });
     if (!msg) {
       throw new MsgNotFound(`Message with id ${id.toString()} not found`);
     }
@@ -39,6 +47,6 @@ export class MessagesController {
   @Post(':id/send')
   @HttpCode(200)
   async ctrlSendMessagekById(@Param('id') id: string): Promise<Message> {
-    return this.msgService.sendMessageDirectly({ filterFields: { id } });
+    return this.msgSvc.sendMessageDirectly({ filterFields: { id } });
   }
 }

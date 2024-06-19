@@ -6,6 +6,7 @@ export type MessageDocument = HydratedDocument<Message>;
 
 export enum MessageStateEnum {
   DRAFT = 'draft',
+  READY = 'ready',
   QUEUED = 'queued',
   STARTED = 'sent',
   FAILED = 'failed'
@@ -30,6 +31,9 @@ export class Message extends BaseEntity {
 
   @Prop({ default: null })
   failReason?: string | null;
+
+  @Prop({ default: null })
+  providerId?: string;
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);
@@ -38,5 +42,10 @@ export type MessageFilter = {
   state?: MessageStateEnum;
 };
 
-// export type TaskOperation = BaseOperate;
-export type MessageOperation = BaseOperate<MessageFilter>;
+export type MessageUpdate = {
+  state?: MessageStateEnum;
+  failReason?: string;
+  providerId?: string;
+};
+
+export type MessageOperation = BaseOperate<MessageFilter, MessageUpdate>;

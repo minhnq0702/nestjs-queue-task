@@ -46,4 +46,4 @@ export type TaskFilter = {
 };
 
 // export type TaskOperation = BaseOperate;
-export type TaskOperation = BaseOperate<TaskFilter>;
+export type TaskOperation = BaseOperate<TaskFilter, object>;
