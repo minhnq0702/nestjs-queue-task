@@ -18,7 +18,7 @@ export class TaskCronService {
 
   @Cron(CronExpression.EVERY_10_SECONDS)
   async cronTaskExecute() {
-    this.logger.debug(`[${process.pid}] CRON DO SOMETHING`);
+    this.logger.debug(`[${process.pid}] CRON EXECUTE QUEUED TASK`);
     const tasksToDo = await this.taskService.listTasks({
       filterFields: {
         state: TaskStateEnum.DRAFT

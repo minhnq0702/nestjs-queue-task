@@ -5,33 +5,27 @@ import { BaseEntity, BaseOperate } from './base.entity';
 export type TaskDocument = HydratedDocument<Task>;
 
 export enum TaskStateEnum {
-  DRAFT = 'DRAFT',
-  PENDING = 'PENDING',
-  QUEUED = 'QUEUED',
-  STARTED = 'STARTED',
-  SUCCESS = 'SUCCESS',
-  FAILED = 'FAILED'
+  DRAFT = 'draft',
+  PENDING = 'pending',
+  QUEUED = 'queued',
+  STARTED = 'started',
+  SUCCESS = 'success',
+  FAILED = 'failed'
 }
 
 @Schema()
 export class Task extends BaseEntity {
-  @Prop()
+  @Prop({ required: true })
   model: string;
 
-  @Prop()
+  @Prop({ required: true })
   func: string;
 
-  @Prop({ type: String, default: '[]' })
+  @Prop({ required: true, type: String, default: '[]' })
   args: string;
 
-  @Prop({ type: String, default: '{}' })
+  @Prop({ required: true, type: String, default: '{}' })
   kwargs: string;
-
-  @Prop({ default: Date.now })
-  createdAt?: Date; // TODO should change to ITask ?
-
-  @Prop({ default: Date.now })
-  updatedAt?: Date; // TODO should change to ITask ?
 
   @Prop({ default: TaskStateEnum.DRAFT })
   state?: TaskStateEnum;
@@ -52,4 +46,4 @@ export type TaskFilter = {
 };
 
 // export type TaskOperation = BaseOperate;
-export type TaskOperation = BaseOperate<TaskFilter>;
+export type TaskOperation = BaseOperate<TaskFilter, object>;
