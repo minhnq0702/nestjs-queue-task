@@ -13,7 +13,7 @@ export class MessageQueueProcessor {
     private readonly msgSvc: MessagesService
   ) {}
 
-  @Process({ name: 'send-msg', concurrency: 600 })
+  @Process({ name: 'send-msg', concurrency: parseInt(process.env.TWILIO_CONCURRENCY) || 300 })
   async onExecuteJob(job: Job<MessageDocument>) {
     // this.logger.log(`${JSON.stringify(job.data)}`);
     try {
@@ -24,7 +24,6 @@ export class MessageQueueProcessor {
       });
       return sid;
     } catch (error) {
-      // this.logger.error(`Error onExecuteJob ${error}`);
       throw error;
     }
   }
@@ -43,9 +42,11 @@ export class MessageQueueProcessor {
   async onFailedTask(job: Job<MessageDocument>, error: Error) {
     this.logger.error(`Job failed ${job.id} - ${error}`, error.stack);
     if (
+      error.message == 'Too Many Requests' ||
       error.message.startsWith('getaddrinfo') ||
-      error.message.startsWith('ETIMEDOUT') ||
+      error.message.includes('ETIMEDOUT') ||
       error.message.includes('ECONNRESET') ||
+      error.message.startsWith('timeout of') ||
       error.message.startsWith('Client network socket disconnected before secure')
     ) {
       await this.msgSvc.updateMsgs({

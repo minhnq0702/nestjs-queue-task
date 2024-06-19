@@ -2,7 +2,7 @@ import { MessageDto } from '@/dto/message.dto';
 import { MsgNotFound } from '@/entities/error.entity';
 import { Message } from '@/entities/message.entity';
 import { LoggerService } from '@/logger/logger.service';
-import { Body, Controller, Get, HttpCode, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 
 @Controller('messages')
@@ -14,8 +14,8 @@ export class MessagesController {
   ) {}
 
   @Get()
-  async ctrlListMsgs(): Promise<Message[]> {
-    return this.msgSvc.listMsgs({ filterFields: {} });
+  async ctrlListMsgs(@Query('limit') limit: number): Promise<Message[]> {
+    return this.msgSvc.listMsgs({ filterFields: {}, limit });
   }
 
   @Post()
@@ -39,6 +39,6 @@ export class MessagesController {
   @Post(':id/send')
   @HttpCode(200)
   async ctrlSendMessagekById(@Param('id') id: string): Promise<Message> {
-    return this.msgSvc.sendMessageDirectly({ filterFields: { id } });
+    return this.msgSvc.sendMsgDirectly(id);
   }
 }

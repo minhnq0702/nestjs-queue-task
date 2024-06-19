@@ -15,13 +15,9 @@ export class MessagesService {
     private readonly logger: LoggerService
   ) {}
 
-  async listMsgs<T extends Message | Message>({ filterFields, limit = null }: MessageOperation): Promise<T[]> {
+  async listMsgs<T extends Message | MessageDocument>({ filterFields, limit = null }: MessageOperation): Promise<T[]> {
     const domain = GetDomain(filterFields);
-    const res = this.msgModel.find<T>(domain);
-    res.sort({ createdAt: -1 }); // TODO add sort params
-    if (limit) {
-      res.limit(limit);
-    }
+    const res = this.msgModel.find<T>(domain, {}, { limit: limit, sort: { createdAt: -1 } });
     return res.exec();
   }
 
@@ -29,7 +25,7 @@ export class MessagesService {
     return this.msgModel.create(task);
   }
 
-  /** Get task filtered by id */
+  /** Get one message filtered by condition */
   async getMsg({ filterFields }: MessageOperation): Promise<MessageDocument> {
     const domain = GetDomain(filterFields);
     const res = this.msgModel.findOne<MessageDocument>(domain);
@@ -41,8 +37,9 @@ export class MessagesService {
     const res = this.msgModel.updateMany<MessageDocument>(domain, {
       ...updateFields,
       $currentDate: {
-        lastModified: true,
-        updatedAt: { $type: 'date' }
+        // lastModified: true,
+        // updatedAt: { $type: 'date' }
+        updatedAt: true
       }
     });
     return res
@@ -58,53 +55,39 @@ export class MessagesService {
       });
   }
 
-  async sendMessageDirectly(
-    { filterFields }: MessageOperation,
-    toSendMsg: null | MessageDocument = null,
-    isThrow = true
-  ): Promise<Message> {
-    if (!toSendMsg) {
-      const domain = GetDomain(filterFields);
-      // * Only allow find and execute task with state DRAFT
-      const res = this.msgModel.findOne<MessageDocument>({
-        ...domain
-        // state: MessageStateEnum.DRAFT
-      });
+  async sendMsgDirectly(msgId: string): Promise<Message> {
+    // * Only allow find and execute task with state DRAFT
+    const res = this.msgModel.findById<MessageDocument>(msgId);
 
-      const toSendMsg = await res.exec();
-      if (!toSendMsg) {
-        if (!isThrow) {
-          return null;
-        }
-        throw new MsgNotFound(`Message with id ${filterFields.id} not found`);
-      }
+    const msg = await res.exec();
+    if (!msg) {
+      throw new MsgNotFound(`Message with id ${msgId} not found`);
+    }
+    if (msg.state !== MessageStateEnum.DRAFT) {
+      throw new Error(`Can not send message is not in DRAFT state`);
     }
     return this.twilioService
       .sendSms({
-        body: toSendMsg.content,
-        to: toSendMsg.receiver,
-        from: toSendMsg.sender
+        body: msg.content,
+        to: msg.receiver,
+        from: msg.sender
       })
       .then((sid) => {
         this.updateMsgs({
-          filterFields: { id: toSendMsg.id },
+          filterFields: { id: msg.id },
           updateFields: { state: MessageStateEnum.QUEUED, providerId: sid }
         });
-        return toSendMsg;
+        return msg;
       })
       .catch((err) => {
         this.updateMsgs({
-          filterFields: { id: toSendMsg.id },
+          filterFields: { id: msg.id },
           updateFields: {
             state: MessageStateEnum.FAILED,
             failReason: err
           }
         });
-        if (isThrow) {
-          throw new Error(err);
-        } else {
-          return toSendMsg;
-        }
+        throw new Error(err);
       });
   }
 }
