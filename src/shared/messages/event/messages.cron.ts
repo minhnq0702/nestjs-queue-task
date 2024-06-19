@@ -19,7 +19,7 @@ export class MessageCronService {
     this.logger.debug(`[${process.pid}] CRON EXECUTE SEND MESSAGES`);
     const msgs = await this.msgSvc.listMsgs<MessageDocument>({
       filterFields: { state: MessageStateEnum.DRAFT },
-      limit: 1000
+      limit: 2500
     });
     // * Update msgs to READY right time prepare to send
     await this.msgSvc
@@ -35,12 +35,6 @@ export class MessageCronService {
         for (const msg of msgs) {
           // * Add msg to queue to send
           this.msgQueue.add('send-msg', msg);
-          // this.msgSvc.sendMessageDirectly(
-          //   {
-          //     filterFields: { id: msg._id.toString() }
-          //   },
-          //   false
-          // );
         }
       });
   }

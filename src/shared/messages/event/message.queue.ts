@@ -13,7 +13,7 @@ export class MessageQueueProcessor {
     private readonly msgSvc: MessagesService
   ) {}
 
-  @Process({ name: 'send-msg', concurrency: 400 })
+  @Process({ name: 'send-msg', concurrency: 600 })
   async onExecuteJob(job: Job<MessageDocument>) {
     // this.logger.log(`${JSON.stringify(job.data)}`);
     try {
@@ -36,7 +36,7 @@ export class MessageQueueProcessor {
       filterFields: { id: job.data._id.toString() },
       updateFields: { state: MessageStateEnum.QUEUED, providerId: result, failReason: null }
     });
-    job.progress(100);
+    // job.progress(100);
   }
 
   @OnQueueFailed()
@@ -45,6 +45,7 @@ export class MessageQueueProcessor {
     if (
       error.message.startsWith('getaddrinfo') ||
       error.message.startsWith('ETIMEDOUT') ||
+      error.message.includes('ECONNRESET') ||
       error.message.startsWith('Client network socket disconnected before secure')
     ) {
       await this.msgSvc.updateMsgs({

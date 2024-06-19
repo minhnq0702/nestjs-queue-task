@@ -20,14 +20,6 @@ export class MessagesController {
 
   @Post()
   async ctrlCreateMessage(@Body() payload: MessageDto): Promise<Message> {
-    Array.from({ length: 10000 }, (_, i) => {
-      this.msgSvc.createMsg({
-        content: payload.content,
-        sender: payload.sender,
-        receiver: payload.receiver
-      });
-      this.logger.debug(`Creating message ${i + 1}`);
-    });
     return this.msgSvc.createMsg({
       content: payload.content,
       sender: payload.sender,
