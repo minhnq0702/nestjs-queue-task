@@ -1,5 +1,7 @@
 import { GetDomain } from '@/entities/base.entity';
-import { Message, MessageDocument, MessageOperation } from '@/entities/message.entity';
+import { MsgNotFound } from '@/entities/error.entity';
+import { Message, MessageDocument, MessageOperation, MessageStateEnum } from '@/entities/message.entity';
+import { TwilioService } from '@/external/twilio/sms.service';
 import { LoggerService } from '@/logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -9,6 +11,7 @@ import { Model } from 'mongoose';
 export class MessagesService {
   constructor(
     @InjectModel(Message.name) private msgModel: Model<Message>,
+    private readonly twilioService: TwilioService,
     private readonly logger: LoggerService
   ) {}
 
@@ -44,5 +47,32 @@ export class MessagesService {
       { new: true }
     );
     return res.exec();
+  }
+
+  async sendMessageDirectly({ filterFields }: MessageOperation): Promise<Message> {
+    const domain = GetDomain(filterFields);
+    // * Only allow find and execute task with state DRAFT
+    const res = this.msgModel.findOne<MessageDocument>({
+      ...domain,
+      state: MessageStateEnum.DRAFT
+    });
+
+    const msg = await res.exec();
+    if (!msg) {
+      throw new MsgNotFound(`Message with id ${filterFields.id} not found`);
+    }
+    return this.twilioService
+      .sendSms({
+        body: msg.content,
+        to: msg.receiver,
+        from: msg.sender
+      })
+      .then(() => {
+        return msg;
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+    // return msg;
   }
 }

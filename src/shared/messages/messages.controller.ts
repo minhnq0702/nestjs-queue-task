@@ -2,7 +2,7 @@ import { MessageDto } from '@/dto/message.dto';
 import { MsgNotFound } from '@/entities/error.entity';
 import { Message } from '@/entities/message.entity';
 import { LoggerService } from '@/logger/logger.service';
-import { Body, Controller, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 
 @Controller('messages')
@@ -15,13 +15,11 @@ export class MessagesController {
 
   @Get()
   async ctrlListMsgs(): Promise<Message[]> {
-    this.logger.log('Listing tasks');
     return this.msgService.listMsgs({ filterFields: {} });
   }
 
   @Post()
   async ctrlCreateMessage(@Body() payload: MessageDto): Promise<Message> {
-    this.logger.log('Creating tasks');
     return this.msgService.createMsg({
       content: payload.content,
       sender: payload.sender,
@@ -31,10 +29,16 @@ export class MessagesController {
 
   @Get(':id')
   async ctrlGetMessagekById(@Param('id') id: string): Promise<Message> {
-    const task = await this.msgService.getMsg({ filterFields: { id } });
-    if (!task) {
+    const msg = await this.msgService.getMsg({ filterFields: { id } });
+    if (!msg) {
       throw new MsgNotFound(`Message with id ${id.toString()} not found`);
     }
-    return task;
+    return msg;
+  }
+
+  @Post(':id/send')
+  @HttpCode(200)
+  async ctrlSendMessagekById(@Param('id') id: string): Promise<Message> {
+    return this.msgService.sendMessageDirectly({ filterFields: { id } });
   }
 }

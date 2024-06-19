@@ -19,7 +19,7 @@ export class Message extends BaseEntity {
   @Prop({ required: true })
   receiver: string;
 
-  @Prop()
+  @Prop({ default: null })
   sender: string | null;
 
   @Prop({ default: false })

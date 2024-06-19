@@ -43,7 +43,6 @@ export class TasksController {
   @Post(':id/execute')
   @HttpCode(HttpStatus.ACCEPTED)
   async ctrlExecuteTaskById(@Param('id') id: string): Promise<Task> {
-    this.logger.log(`Executing task ${id}`);
     return await this.tasksService.executeTaskDirectly({ filterFields: { id } });
   }
 
