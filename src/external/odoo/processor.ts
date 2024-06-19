@@ -22,7 +22,6 @@ export default function (job: Job<OdooDoingTaskParams>, cb: DoneCallback) {
       // this.logger.debug(`Response: ${res.status} ${res.statusText}`);
       const { status, statusText } = res;
       const respText = await res.text();
-      console.debug(`Response: ${status} ${statusText} ${respText}`);
       if (status !== 200) {
         cb(new Error(`Error: ${status} ${statusText} ${respText}`));
       }
