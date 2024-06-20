@@ -33,7 +33,12 @@ export class MessageQueueProcessor {
     // this.logger.log(`[${process.pid}] Job completed ${job.id} - ${result}`);
     await this.msgSvc.updateMsgs({
       filterFields: { id: job.data._id.toString() },
-      updateFields: { state: MessageStateEnum.QUEUED, providerId: result, failReason: null }
+      updateFields: {
+        state: MessageStateEnum.QUEUED,
+        providerId: result,
+        failReason: null,
+        addInfo: { executeDuration: job.finishedOn - job.processedOn }
+      }
     });
     // job.progress(100);
   }

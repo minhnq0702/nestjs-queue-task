@@ -12,6 +12,10 @@ export enum MessageStateEnum {
   FAILED = 'failed'
 }
 
+export type MessageAddInfo = {
+  executeDuration?: number;
+};
+
 @Schema()
 export class Message extends BaseEntity {
   @Prop({ required: true })
@@ -34,6 +38,9 @@ export class Message extends BaseEntity {
 
   @Prop({ default: null })
   providerId?: string;
+
+  @Prop({ type: Object, default: null })
+  addInfo?: MessageAddInfo;
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);
@@ -46,6 +53,7 @@ export type MessageUpdate = {
   state?: MessageStateEnum;
   failReason?: string;
   providerId?: string;
+  addInfo?: MessageAddInfo;
 };
 
 export type MessageOperation = BaseOperate<MessageFilter, MessageUpdate>;
