@@ -1,4 +1,4 @@
-import { MessageDocument, MessageStateEnum } from '@/entities/message.entity';
+import { MessageDoc, MessageStateEnum } from '@/entities/message.entity';
 import { TwilioService } from '@/external/twilio/sms.service';
 import { LoggerService } from '@/logger/logger.service';
 import { OnQueueCompleted, OnQueueFailed, Process, Processor } from '@nestjs/bull';
@@ -14,7 +14,7 @@ export class MessageQueueProcessor {
   ) {}
 
   @Process({ name: 'send-msg', concurrency: parseInt(process.env.TWILIO_CONCURRENCY) || 300 })
-  async onExecuteJob(job: Job<MessageDocument>) {
+  async onExecuteJob(job: Job<MessageDoc>) {
     // this.logger.log(`${JSON.stringify(job.data)}`);
     try {
       const sid = await this.twilioSvc.sendSms({
@@ -29,7 +29,7 @@ export class MessageQueueProcessor {
   }
 
   @OnQueueCompleted()
-  async onCompletedTask(job: Job<MessageDocument>, result: string) {
+  async onCompletedTask(job: Job<MessageDoc>, result: string) {
     // this.logger.log(`[${process.pid}] Job completed ${job.id} - ${result}`);
     await this.msgSvc.updateMsgs({
       filterFields: { id: job.data._id.toString() },
@@ -39,7 +39,7 @@ export class MessageQueueProcessor {
   }
 
   @OnQueueFailed()
-  async onFailedTask(job: Job<MessageDocument>, error: Error) {
+  async onFailedTask(job: Job<MessageDoc>, error: Error) {
     this.logger.error(`Job failed ${job.id} - ${error}`, error.stack);
     if (
       error.message == 'Too Many Requests' ||

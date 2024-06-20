@@ -1,6 +1,6 @@
 import { MessageDto } from '@/dto/message.dto';
 import { MsgNotFound } from '@/entities/error.entity';
-import { Message } from '@/entities/message.entity';
+import { MessageDoc } from '@/entities/message.entity';
 import { LoggerService } from '@/logger/logger.service';
 import { Body, Controller, Get, HttpCode, Param, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagesService } from './messages.service';
@@ -14,12 +14,12 @@ export class MessagesController {
   ) {}
 
   @Get()
-  async ctrlListMsgs(@Query('limit') limit: number): Promise<Message[]> {
+  async ctrlListMsgs(@Query('limit') limit: number): Promise<MessageDoc[]> {
     return this.msgSvc.listMsgs({ filterFields: {}, limit });
   }
 
   @Post()
-  async ctrlCreateMessage(@Body() payload: MessageDto): Promise<Message> {
+  async ctrlCreateMessage(@Body() payload: MessageDto): Promise<MessageDoc> {
     return this.msgSvc.createMsg({
       content: payload.content,
       sender: payload.sender,
@@ -28,7 +28,7 @@ export class MessagesController {
   }
 
   @Get(':id')
-  async ctrlGetMessagekById(@Param('id') id: string): Promise<Message> {
+  async ctrlGetMessagekById(@Param('id') id: string): Promise<MessageDoc> {
     const msg = await this.msgSvc.getMsg({ filterFields: { id } });
     if (!msg) {
       throw new MsgNotFound(`Message with id ${id.toString()} not found`);
@@ -38,7 +38,7 @@ export class MessagesController {
 
   @Post(':id/send')
   @HttpCode(200)
-  async ctrlSendMessagekById(@Param('id') id: string): Promise<Message> {
+  async ctrlSendMessagekById(@Param('id') id: string): Promise<MessageDoc> {
     return this.msgSvc.sendMsgDirectly(id);
   }
 }

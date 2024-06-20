@@ -1,6 +1,6 @@
 import { GetDomain } from '@/entities/base.entity';
 import { MsgNotFound } from '@/entities/error.entity';
-import { Message, MessageDocument, MessageOperation, MessageStateEnum } from '@/entities/message.entity';
+import { Message, MessageDoc, MessageOperation, MessageStateEnum } from '@/entities/message.entity';
 import { TwilioService } from '@/external/twilio/sms.service';
 import { LoggerService } from '@/logger/logger.service';
 import { Injectable } from '@nestjs/common';
@@ -15,26 +15,26 @@ export class MessagesService {
     private readonly logger: LoggerService
   ) {}
 
-  async listMsgs<T extends Message | MessageDocument>({ filterFields, limit = null }: MessageOperation): Promise<T[]> {
+  async listMsgs({ filterFields, limit = null }: MessageOperation): Promise<MessageDoc[]> {
     const domain = GetDomain(filterFields);
-    const res = this.msgModel.find<T>(domain, {}, { limit: limit, sort: { createdAt: -1 } });
+    const res = this.msgModel.find(domain, {}, { limit: limit, sort: { createdAt: -1 } });
     return res.exec();
   }
 
-  async createMsg(task: Message): Promise<MessageDocument> {
+  async createMsg(task: Message): Promise<MessageDoc> {
     return this.msgModel.create(task);
   }
 
   /** Get one message filtered by condition */
-  async getMsg({ filterFields }: MessageOperation): Promise<MessageDocument> {
+  async getMsg({ filterFields }: MessageOperation): Promise<MessageDoc> {
     const domain = GetDomain(filterFields);
-    const res = this.msgModel.findOne<MessageDocument>(domain);
+    const res = this.msgModel.findOne(domain);
     return res.exec();
   }
 
   async updateMsgs({ filterFields, updateFields }: MessageOperation): Promise<number> {
     const domain = GetDomain(filterFields);
-    const res = this.msgModel.updateMany<MessageDocument>(domain, {
+    const res = this.msgModel.updateMany(domain, {
       ...updateFields,
       $currentDate: {
         // lastModified: true,
@@ -55,9 +55,9 @@ export class MessagesService {
       });
   }
 
-  async sendMsgDirectly(msgId: string): Promise<Message> {
+  async sendMsgDirectly(msgId: string): Promise<MessageDoc> {
     // * Only allow find and execute task with state DRAFT
-    const res = this.msgModel.findById<MessageDocument>(msgId);
+    const res = this.msgModel.findById(msgId);
 
     const msg = await res.exec();
     if (!msg) {

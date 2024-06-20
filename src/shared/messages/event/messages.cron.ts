@@ -1,4 +1,4 @@
-import { MessageDocument, MessageStateEnum } from '@/entities/message.entity';
+import { MessageStateEnum } from '@/entities/message.entity';
 import { LoggerService } from '@/logger/logger.service';
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
@@ -17,7 +17,7 @@ export class MessageCronService {
   @Cron(CronExpression.EVERY_5_SECONDS)
   async cronSendMsgs() {
     this.logger.debug(`[${process.pid}] CRON EXECUTE SEND MESSAGES`);
-    const msgs = await this.msgSvc.listMsgs<MessageDocument>({
+    const msgs = await this.msgSvc.listMsgs({
       filterFields: { state: MessageStateEnum.DRAFT },
       limit: 2500
     });

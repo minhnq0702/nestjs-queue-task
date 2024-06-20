@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { BaseEntity, BaseOperate } from './base.entity';
 
-export type MessageDocument = HydratedDocument<Message>;
+export type MessageDoc = HydratedDocument<Message>;
 
 export enum MessageStateEnum {
   DRAFT = 'draft',
