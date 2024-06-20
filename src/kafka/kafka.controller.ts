@@ -18,20 +18,10 @@ export class KafkaController {
   @EventPattern(KAFKA_ODOO_TOPIC) // ! use eventpattern instead of messagepattern for no reply needed
   @UsePipes(ValidationPipe)
   @UseFilters(KafkaFilter)
-  async devTest(@Payload() task: TaskDto, @Ctx() ctx: KafkaContext): Promise<Record<string, string>> {
+  async OdooQueueJobTopic(@Payload() task: TaskDto, @Ctx() ctx: KafkaContext) {
     const _t = plainToInstance(Task, task);
     const heartbeat = ctx.getHeartbeat();
+    await this.emitEvent.emitAsync(EMIT_CREATE_TASK, _t); // * do not inject taskSvc here in order to get rid of dependency injection here
     heartbeat(); // TODO review: should await heartbeat() or not?
-
-    // ! Dev testing
-    // this.client.emit('dev_1', JSON.stringify({ status: 'ok' }));
-    this.emitEvent.emitAsync(EMIT_CREATE_TASK, _t); // ? move to service ?
-    return { status: 'ok' };
-  }
-
-  @EventPattern('dev_1') // ! use eventpattern instead of messagepattern for no reply needed
-  devTestReply(@Payload() messages: any): Record<string, string> {
-    console.log('Reply message:', messages);
-    return { status: 'ok' };
   }
 }

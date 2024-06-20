@@ -23,7 +23,7 @@ export class TaskCronService {
       filterFields: {
         state: TaskStateEnum.DRAFT
       },
-      limit: 20
+      limit: 100
     });
     // console.log('READY?', await this.taskQueue.isReady());
     // if (!(await this.taskQueue.isReady())) {
