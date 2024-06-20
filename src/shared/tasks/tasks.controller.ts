@@ -3,7 +3,18 @@ import { TaskDto } from '@/dto/task.dto';
 import { TaskNotFound } from '@/entities/error.entity';
 import { Task, TaskDoc } from '@/entities/task.entity';
 import { LoggerService } from '@/logger/logger.service';
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+  UsePipes,
+  ValidationPipe
+} from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { TasksService } from './tasks.service';
 
@@ -16,8 +27,8 @@ export class TasksController {
   ) {}
 
   @Get()
-  async ctrlListTasks(): Promise<Task[]> {
-    return this.tasksService.listTasks({ filterFields: {} });
+  async ctrlListTasks(@Query('limit') limit: number): Promise<Task[]> {
+    return this.tasksService.listTasks({ filterFields: {}, limit });
   }
 
   @Post()

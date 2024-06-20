@@ -17,7 +17,7 @@ export class MessagesService {
 
   async listMsgs({ filterFields, limit = null }: MessageOperation): Promise<MessageDoc[]> {
     const domain = GetDomain(filterFields);
-    const res = this.msgModel.find(domain, {}, { limit: limit, sort: { createdAt: -1 } });
+    const res = this.msgModel.find(domain, {}, { limit: limit, sort: { createdAt: 'desc' } });
     return res.exec();
   }
 

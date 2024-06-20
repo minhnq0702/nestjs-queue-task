@@ -2,7 +2,18 @@ import { MessageDto } from '@/dto/message.dto';
 import { MsgNotFound } from '@/entities/error.entity';
 import { MessageDoc } from '@/entities/message.entity';
 import { LoggerService } from '@/logger/logger.service';
-import { Body, Controller, Get, HttpCode, Param, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+  UsePipes,
+  ValidationPipe
+} from '@nestjs/common';
 import { MessagesService } from './messages.service';
 
 @Controller('messages')
@@ -37,7 +48,7 @@ export class MessagesController {
   }
 
   @Post(':id/send')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async ctrlSendMessagekById(@Param('id') id: string): Promise<MessageDoc> {
     return this.msgSvc.sendMsgDirectly(id);
   }

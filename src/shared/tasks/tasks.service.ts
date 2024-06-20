@@ -22,11 +22,7 @@ export class TasksService {
   // ? review type Promise<TaskDocument[]>
   async listTasks({ filterFields, limit = null }: TaskOperation): Promise<TaskDoc[]> {
     const domain = GetDomain(filterFields);
-    const res = this.taskModel.find<TaskDoc>(domain);
-    res.sort({ createdAt: -1 }); // TODO add sort params
-    if (limit) {
-      res.limit(limit);
-    }
+    const res = this.taskModel.find<TaskDoc>(domain, {}, { limit: limit, sort: { createdAt: 'desc' } });
     return res.exec();
   }
 
