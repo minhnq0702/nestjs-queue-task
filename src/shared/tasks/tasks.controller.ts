@@ -1,7 +1,7 @@
 import { EMIT_CREATE_TASK } from '@/constants';
 import { TaskDto } from '@/dto/task.dto';
 import { TaskNotFound } from '@/entities/error.entity';
-import { Task } from '@/entities/task.entity';
+import { Task, TaskDoc } from '@/entities/task.entity';
 import { LoggerService } from '@/logger/logger.service';
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
@@ -21,7 +21,7 @@ export class TasksController {
   }
 
   @Post()
-  async ctrlCreateTask(@Body() payload: TaskDto): Promise<Task> {
+  async ctrlCreateTask(@Body() payload: TaskDto): Promise<TaskDoc> {
     return this.tasksService.createTask({
       model: payload.model,
       func: payload.func,
@@ -32,7 +32,7 @@ export class TasksController {
   }
 
   @Get(':id')
-  async ctrlGetTaskById(@Param('id') id: string): Promise<Task> {
+  async ctrlGetTaskById(@Param('id') id: string): Promise<TaskDoc> {
     const task = await this.tasksService.getTask({ filterFields: { id } });
     if (!task) {
       throw new TaskNotFound(`Task with id ${id.toString()} not found`);
@@ -42,12 +42,12 @@ export class TasksController {
 
   @Post(':id/execute')
   @HttpCode(HttpStatus.ACCEPTED)
-  async ctrlExecuteTaskById(@Param('id') id: string): Promise<Task> {
+  async ctrlExecuteTaskById(@Param('id') id: string): Promise<TaskDoc> {
     return await this.tasksService.executeTaskDirectly({ filterFields: { id } });
   }
 
   @OnEvent(EMIT_CREATE_TASK, { async: true })
-  async eventHandleCreateTask(task: Task): Promise<Task> {
+  async eventHandleCreateTask(task: Task): Promise<TaskDoc> {
     this.logger.debug(`event emitted ${JSON.stringify(task)}`);
     return this.tasksService.createTask(task);
   }

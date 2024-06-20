@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { BaseEntity, BaseOperate } from './base.entity';
 
-export type TaskDocument = HydratedDocument<Task>;
+export type TaskDoc = HydratedDocument<Task>;
 
 export enum TaskStateEnum {
   DRAFT = 'draft',

@@ -1,7 +1,7 @@
 import { ODOO_CONFIG } from '@/constants';
 import { GetDomain } from '@/entities/base.entity';
 import { TaskNotFound } from '@/entities/error.entity';
-import { Task, TaskDocument, TaskOperation, TaskStateEnum } from '@/entities/task.entity';
+import { Task, TaskDoc, TaskOperation, TaskStateEnum } from '@/entities/task.entity';
 import { OdooService } from '@/external/odoo/odoo.service';
 import { LoggerService } from '@/logger/logger.service';
 import { Injectable } from '@nestjs/common';
@@ -20,9 +20,9 @@ export class TasksService {
   ) {}
 
   // ? review type Promise<TaskDocument[]>
-  async listTasks({ filterFields, limit = null }: TaskOperation): Promise<TaskDocument[]> {
+  async listTasks({ filterFields, limit = null }: TaskOperation): Promise<TaskDoc[]> {
     const domain = GetDomain(filterFields);
-    const res = this.taskModel.find<TaskDocument>(domain);
+    const res = this.taskModel.find<TaskDoc>(domain);
     res.sort({ createdAt: -1 }); // TODO add sort params
     if (limit) {
       res.limit(limit);
@@ -30,20 +30,20 @@ export class TasksService {
     return res.exec();
   }
 
-  async createTask(task: Task): Promise<Task> {
+  async createTask(task: Task): Promise<TaskDoc> {
     return this.taskModel.create(task);
   }
 
   /** Get task filtered by id */
-  async getTask({ filterFields }: TaskOperation): Promise<Task> {
+  async getTask({ filterFields }: TaskOperation): Promise<TaskDoc> {
     const domain = GetDomain(filterFields);
-    const res = this.taskModel.findOne<Task>(domain);
+    const res = this.taskModel.findOne(domain);
     return res.exec();
   }
 
-  async updateTask({ filterFields, updateFields }: TaskOperation): Promise<Task> {
+  async updateTask({ filterFields, updateFields }: TaskOperation): Promise<TaskDoc> {
     const domain = GetDomain(filterFields);
-    const res = this.taskModel.findOneAndUpdate<Task>(
+    const res = this.taskModel.findOneAndUpdate(
       domain,
       {
         ...updateFields,
@@ -55,15 +55,15 @@ export class TasksService {
   }
 
   /** Execute task: Request to external service to execute queued task (Odoo, etc..) */
-  async executeTaskDirectly({ filterFields }: TaskOperation): Promise<Task> {
+  async executeTaskDirectly({ filterFields }: TaskOperation): Promise<TaskDoc> {
     const domain = GetDomain(filterFields);
     // * Only allow find and execute task with state DRAFT
-    const res = this.taskModel.findOne<Task>({
+    const res = this.taskModel.findOne({
       ...domain,
       state: TaskStateEnum.DRAFT
     });
 
-    return res.exec().then(async (task: TaskDocument) => {
+    return res.exec().then(async (task) => {
       if (!task) {
         throw new TaskNotFound();
       }
