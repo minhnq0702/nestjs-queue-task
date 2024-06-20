@@ -1,11 +1,12 @@
 import { MessageDoc, MessageStateEnum } from '@/entities/message.entity';
 import { TwilioService } from '@/external/twilio/sms.service';
 import { LoggerService } from '@/logger/logger.service';
+import { TWILIO_QUEUE_MSG_CHANNEL, TWILIO_QUEUE_MSG_CONCURRENCY } from '@/shared/messages/constants';
+import { MessagesService } from '@/shared/messages/messages.service';
 import { OnQueueCompleted, OnQueueFailed, Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
-import { MessagesService } from '../messages.service';
 
-@Processor('message.queue.channel')
+@Processor(TWILIO_QUEUE_MSG_CHANNEL)
 export class MessageQueueProcessor {
   constructor(
     private readonly logger: LoggerService,
@@ -13,7 +14,7 @@ export class MessageQueueProcessor {
     private readonly msgSvc: MessagesService
   ) {}
 
-  @Process({ name: 'send-msg', concurrency: parseInt(process.env.TWILIO_CONCURRENCY) || 300 })
+  @Process({ name: 'send-msg', concurrency: TWILIO_QUEUE_MSG_CONCURRENCY || 300 })
   async onExecuteJob(job: Job<MessageDoc>) {
     // this.logger.log(`${JSON.stringify(job.data)}`);
     try {

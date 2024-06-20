@@ -1,16 +1,17 @@
 import { MessageStateEnum } from '@/entities/message.entity';
 import { LoggerService } from '@/logger/logger.service';
+import { TWILIO_QUEUE_MSG_CHANNEL } from '@/shared/messages/constants';
+import { MessagesService } from '@/shared/messages/messages.service';
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Queue } from 'bull';
-import { MessagesService } from '../messages.service';
 
 @Injectable()
 export class MessageCronService {
   constructor(
     private readonly logger: LoggerService,
-    @InjectQueue('message.queue.channel') private msgQueue: Queue,
+    @InjectQueue(TWILIO_QUEUE_MSG_CHANNEL) private msgQueue: Queue,
     private readonly msgSvc: MessagesService
   ) {}
 

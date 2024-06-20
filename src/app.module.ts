@@ -1,8 +1,6 @@
 import { AuthModule } from '@/auth/auth.module';
 import { KafkaModule } from '@/kafka/kafka.module';
 import { LoggerModule } from '@/logger/logger.module';
-import { MessagesModule } from '@/shared/messages/messages.module';
-import { TasksModule } from '@/shared/tasks/tasks.module';
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -13,6 +11,7 @@ import { appConfig } from './app.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DB_CONFIG } from './constants';
+import { ModuleLoader } from './shared/module.loader';
 
 @Module({
   imports: [
@@ -60,10 +59,15 @@ import { DB_CONFIG } from './constants';
     // }),
     KafkaModule,
     AuthModule,
-    TasksModule,
-    MessagesModule
+    ModuleLoader.register()
+    // TasksModule,
+    // MessagesModule
   ],
-  controllers: [AppController],
-  providers: [AppService]
+  providers: [AppService],
+  controllers: [AppController]
 })
-export class AppModule {}
+export class AppModule {
+  constructor() {
+    console.log('it get in constructor');
+  }
+}

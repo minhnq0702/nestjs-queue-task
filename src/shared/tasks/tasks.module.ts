@@ -32,7 +32,6 @@ import { TasksService } from './tasks.service';
       name: ODOO_QUEUE_TASK_CHANNEL,
       processors: [
         {
-          // concurrency: 5,
           // name: 'task',
           concurrency: ODOO_CONCURRENCY || 5,
           path: join(__dirname, '..', '..', 'external', 'odoo', 'processor.js')
