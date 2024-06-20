@@ -13,8 +13,7 @@ export class TwilioService {
   constructor(private readonly logger: LoggerService) {
     logger.debug('Initialize TwilioClient');
     this.client = new Twilio(accountSid, authToken);
-    this.client.httpClient.defaultTimeout = 100000;
-    // this.client.httpClient.axios.defaults.timeout = 100000;
+    this.client.httpClient.defaultTimeout = 15000;
   }
 
   async sendSms(sms: TwilioSMSDto): Promise<string> {
@@ -35,7 +34,6 @@ export class TwilioService {
       // this.logger.debug(`TwilioService.sendSms +${hrtime(_start)}s`);
       return msg.sid;
     } catch (error) {
-      // this.logger.error(`TwilioService.sendSms ${error}`);
       throw error;
     }
   }
