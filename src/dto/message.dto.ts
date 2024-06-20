@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsDateString, IsOptional, IsString } from 'class-validator';
 
 export class MessageDto {
   @IsString()
@@ -10,4 +10,8 @@ export class MessageDto {
   @IsString()
   @IsOptional()
   sender: string | null;
+
+  @IsDateString()
+  @IsOptional()
+  scheduleAt: Date;
 }

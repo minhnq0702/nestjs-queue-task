@@ -30,6 +30,9 @@ export class Message extends BaseEntity {
   @Prop({ default: false })
   read?: boolean; // * Think about how to implement this feature
 
+  @Prop({ default: null })
+  scheduleAt?: Date;
+
   @Prop({ default: MessageStateEnum.DRAFT })
   state?: string;
 
@@ -43,10 +46,16 @@ export class Message extends BaseEntity {
   addInfo?: MessageAddInfo;
 }
 
+type PartialOperator<K extends keyof any, T> = {
+  [P in K]?: T;
+};
+// type ListOperator =  PartialOperator<'$eq' | '$gt' | '$lt', string>
+
 export const MessageSchema = SchemaFactory.createForClass(Message);
 
 export type MessageFilter = {
   state?: MessageStateEnum;
+  scheduleAt?: PartialOperator<'$eq' | '$gt' | '$lt', Date>;
 };
 
 export type MessageUpdate = {

@@ -26,15 +26,13 @@ export class MessagesController {
 
   @Get()
   async ctrlListMsgs(@Query('limit') limit: number): Promise<MessageDoc[]> {
-    return this.msgSvc.listMsgs({ filterFields: {}, limit });
+    return this.msgSvc.listMsgs({}, limit);
   }
 
   @Post()
   async ctrlCreateMessage(@Body() payload: MessageDto): Promise<MessageDoc> {
     return this.msgSvc.createMsg({
-      content: payload.content,
-      sender: payload.sender,
-      receiver: payload.receiver
+      ...payload
     });
   }
 

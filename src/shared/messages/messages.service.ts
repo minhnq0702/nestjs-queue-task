@@ -5,7 +5,7 @@ import { TwilioService } from '@/external/twilio/sms.service';
 import { LoggerService } from '@/logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 
 @Injectable()
 export class MessagesService {
@@ -15,9 +15,8 @@ export class MessagesService {
     private readonly logger: LoggerService
   ) {}
 
-  async listMsgs({ filterFields, limit = null }: MessageOperation): Promise<MessageDoc[]> {
-    const domain = GetDomain(filterFields);
-    const res = this.msgModel.find(domain, {}, { limit: limit, sort: { createdAt: 'desc' } });
+  async listMsgs(filter: FilterQuery<MessageDoc>, limit: number = null): Promise<MessageDoc[]> {
+    const res = this.msgModel.find(filter, {}, { limit: limit, sort: { createdAt: 'desc' } });
     return res.exec();
   }
 
@@ -89,5 +88,29 @@ export class MessagesService {
         });
         throw new Error(err);
       });
+  }
+
+  async getMsgToSendByCron(): Promise<MessageDoc[]> {
+    return this.listMsgs({
+      $and: [
+        {
+          state: MessageStateEnum.DRAFT
+        },
+        {
+          $or: [
+            {
+              scheduleAt: {
+                $lt: new Date()
+              }
+            },
+            {
+              scheduleAt: {
+                $eq: null
+              }
+            }
+          ]
+        }
+      ]
+    });
   }
 }
