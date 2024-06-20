@@ -36,12 +36,7 @@ export class MessageCronService {
           state: MessageStateEnum.READY
         }
       })
-      .then(() => {
-        for (const msg of msgs) {
-          // * Add msg to queue to send
-          this.msgQueue.add('send-msg', msg);
-        }
-      })
+      .then(() => msgs.map((msg) => this.msgQueue.add('send-msg', msg)))
       .catch((err) => this.logger.error(`Error on update message to ready before sent ${err}`, err.stack));
   }
 }

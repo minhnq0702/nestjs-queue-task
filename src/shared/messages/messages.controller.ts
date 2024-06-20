@@ -30,10 +30,16 @@ export class MessagesController {
   }
 
   @Post()
-  async ctrlCreateMessage(@Body() payload: MessageDto): Promise<MessageDoc> {
-    return this.msgSvc.createMsg({
-      ...payload
-    });
+  async ctrlCreateMessage(@Body() payload: MessageDto | MessageDto[]): Promise<MessageDoc[]> {
+    if (Array.isArray(payload)) {
+      return Promise.all(payload.map((item) => this.msgSvc.createMsg(item)));
+    } else {
+      return this.msgSvc.createMsg(payload).then((res) => [res]);
+    }
+
+    // return this.msgSvc.createMsg({
+    //   ...payload
+    // });
   }
 
   @Get(':id')
