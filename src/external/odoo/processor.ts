@@ -7,15 +7,15 @@ export default function (job: Job<OdooDoingTaskParams>, cb: DoneCallback) {
   fetch(`${url}`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       model: taskParams.model,
       func: taskParams.func,
       records: taskParams.records,
       args: taskParams.args,
-      kwargs: taskParams.kwargs
-    })
+      kwargs: taskParams.kwargs,
+    }),
   }).then(
     async (res) => {
       // ? how to log this?
@@ -35,6 +35,6 @@ export default function (job: Job<OdooDoingTaskParams>, cb: DoneCallback) {
     async (err) => {
       cb(new Error(`Task failed ${err}`));
       // return err;
-    }
+    },
   );
 }

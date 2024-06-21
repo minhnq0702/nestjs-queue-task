@@ -7,10 +7,10 @@ export const kafkaClientOptions = (config: ConfigService): KafkaOptions['options
   return {
     client: {
       clientId: 'kafka-client',
-      brokers
+      brokers,
     },
     consumer: {
-      groupId: 'kafka-consumer'
-    }
+      groupId: 'kafka-consumer',
+    },
   };
 };
