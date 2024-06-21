@@ -38,6 +38,10 @@ export class TaskAlreadyExist extends Conflict {
   error = 'TASK_ALREADY_EXIST';
 }
 
+export class AccountAlreadyExist extends Conflict {
+  error = 'ACCOUNT_ALREADY_EXIST';
+}
+
 // export class LoginFail extends MyException {
 //   httpStatus = STATUS.UNAUTHORIZED;
 //   code = this.httpStatus;
