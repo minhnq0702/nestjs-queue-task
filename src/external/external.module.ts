@@ -6,6 +6,6 @@ import { TwilioService } from './twilio/sms.service';
 @Module({
   imports: [LoggerModule.register('External')],
   providers: [OdooService, TwilioService],
-  exports: [OdooService, TwilioService]
+  exports: [OdooService, TwilioService],
 })
 export class ExternalModule {}

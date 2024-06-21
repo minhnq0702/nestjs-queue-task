@@ -1,3 +1,4 @@
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ClientKafka } from '@nestjs/microservices';
 import { KafkaController } from './kafka.controller';
 
@@ -5,7 +6,7 @@ describe('KafkaController', () => {
   let controller: KafkaController;
 
   beforeEach(async () => {
-    controller = new KafkaController(new ClientKafka({}));
+    controller = new KafkaController(new ClientKafka({}), new EventEmitter2());
   });
 
   it('should be defined', () => {

@@ -12,7 +12,7 @@ import { KafkaFilter } from './kafka.filter';
 export class KafkaController {
   constructor(
     @Inject(KAFKA_CLIENT_REF) private readonly client: ClientKafka,
-    private emitEvent: EventEmitter2
+    private emitEvent: EventEmitter2,
   ) {}
 
   @EventPattern(KAFKA_ODOO_TOPIC) // ! use eventpattern instead of messagepattern for no reply needed

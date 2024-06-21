@@ -6,7 +6,7 @@ describe('KafkaService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [KafkaService]
+      providers: [KafkaService],
     }).compile();
 
     service = module.get<KafkaService>(KafkaService);

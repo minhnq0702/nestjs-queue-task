@@ -16,7 +16,7 @@ export class KafkaFilter implements ExceptionFilter {
     // console.log('exception', exception);
     this.logger.error(
       `Validation error on topic ${topic}, partition ${partition}, offset ${offset}: ${exception.message}`,
-      exception.stack
+      exception.stack,
     );
   }
 }

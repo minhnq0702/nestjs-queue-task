@@ -19,15 +19,15 @@ import { kafkaClientOptions } from './utils';
         logger.debug('>>>>>> INIT KAFKA SERVER FACTORY <<<<<<');
         return new ClientKafka(kafkaClientOptions(configService));
       },
-      inject: [LoggerService, ConfigService]
-    }
+      inject: [LoggerService, ConfigService],
+    },
   ],
-  controllers: [KafkaController]
+  controllers: [KafkaController],
 })
 export class KafkaModule implements OnModuleInit, OnModuleDestroy {
   constructor(
     private readonly logger: LoggerService,
-    @Inject(KAFKA_CLIENT_REF) private readonly kafkaClient: ClientKafka
+    @Inject(KAFKA_CLIENT_REF) private readonly kafkaClient: ClientKafka,
   ) {}
 
   async onModuleInit() {

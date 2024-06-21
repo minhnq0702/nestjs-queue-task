@@ -21,7 +21,7 @@ export class LoggerService extends Logger {
           return `${timestamp} - ${('[' + level.toUpperCase() + ']').padEnd(10)}${context ? ('[' + context + ']').padEnd(20) : ''} ${_message} ${stack ? '\n' + stack : ''}`;
         }),
         winston.format.errors({ stack: true }),
-        winston.format.splat()
+        winston.format.splat(),
         // winston.format.padLevels()
         // winston.format.simple()
       ),
@@ -31,10 +31,10 @@ export class LoggerService extends Logger {
           format: winston.format.combine(
             winston.format.colorize({
               all: true,
-              colors: { info: 'blue', error: 'red', debug: 'yellow' }
-            })
-          )
-        })
+              colors: { info: 'blue', error: 'red', debug: 'yellow' },
+            }),
+          ),
+        }),
 
         // new winston.transports.DailyRotateFile({
         //   dirname: `logs/access`,
@@ -72,7 +72,7 @@ export class LoggerService extends Logger {
         //   level: 'error',
         //   zippedArchive: true,
         // }),
-      ]
+      ],
     });
     this.log(`Init logger instance`, context);
   }
