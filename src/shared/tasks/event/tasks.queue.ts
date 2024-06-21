@@ -1,4 +1,4 @@
-import { OdooDoingTaskParams } from '@/dto/odoo.doing.task.dto';
+import { OdooDoingTaskParams } from '@/dto/event/odoo.doing.task.dto';
 import { TaskStateEnum } from '@/entities/task.entity';
 import { LoggerService } from '@/logger/logger.service';
 import { ODOO_QUEUE_TASK_CHANNEL } from '@/shared/tasks/constants';

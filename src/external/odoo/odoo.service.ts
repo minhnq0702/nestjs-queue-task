@@ -1,4 +1,4 @@
-import { OdooDoingTaskParams } from '@/dto/odoo.doing.task.dto';
+import { OdooDoingTaskParams } from '@/dto/event/odoo.doing.task.dto';
 import { LoggerService } from '@/logger/logger.service';
 import { Injectable } from '@nestjs/common';
 

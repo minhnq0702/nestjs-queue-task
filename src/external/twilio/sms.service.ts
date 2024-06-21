@@ -1,4 +1,4 @@
-import { TwilioSMSDto } from '@/dto/twilio.sms.dto';
+import { TwilioSMSDto } from '@/dto/event/twilio.sms.dto';
 import { LoggerService } from '@/logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { Twilio } from 'twilio';

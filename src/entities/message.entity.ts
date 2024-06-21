@@ -46,16 +46,10 @@ export class Message extends BaseEntity {
   addInfo?: MessageAddInfo;
 }
 
-type PartialOperator<K extends keyof any, T> = {
-  [P in K]?: T;
-};
-// type ListOperator =  PartialOperator<'$eq' | '$gt' | '$lt', string>
-
 export const MessageSchema = SchemaFactory.createForClass(Message);
 
 export type MessageFilter = {
   state?: MessageStateEnum;
-  scheduleAt?: PartialOperator<'$eq' | '$gt' | '$lt', Date>;
 };
 
 export type MessageUpdate = {
