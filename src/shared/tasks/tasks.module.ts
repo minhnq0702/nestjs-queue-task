@@ -34,13 +34,13 @@ import { TasksService } from './tasks.service';
         {
           // name: 'task',
           concurrency: ODOO_CONCURRENCY || 5,
-          path: join(__dirname, '..', '..', 'external', 'odoo', 'processor.js')
-        }
-      ]
+          path: join(__dirname, '..', '..', 'external', 'odoo', 'processor.js'),
+        },
+      ],
     }),
-    ExternalModule
+    ExternalModule,
   ],
   providers: [ConfigService, TaskCronService, TasksService, TaskQueueProcessor],
-  controllers: [TasksController]
+  controllers: [TasksController],
 })
 export class TasksModule {}

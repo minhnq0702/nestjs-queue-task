@@ -13,7 +13,7 @@ export class TaskCronService {
     @InjectQueue(process.env.ODOO_QUEUE_TASK_CHANNEL) private taskQueue: Queue,
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
-    private readonly taskService: TasksService
+    private readonly taskService: TasksService,
   ) {}
 
   @Cron(CronExpression.EVERY_10_SECONDS)
@@ -21,9 +21,9 @@ export class TaskCronService {
     this.logger.debug(`[${process.pid}] CRON EXECUTE QUEUED TASK`);
     const tasksToDo = await this.taskService.listTasks({
       filterFields: {
-        state: TaskStateEnum.DRAFT
+        state: TaskStateEnum.DRAFT,
       },
-      limit: 100
+      limit: 100,
     });
     // console.log('READY?', await this.taskQueue.isReady());
     // if (!(await this.taskQueue.isReady())) {
@@ -41,12 +41,12 @@ export class TaskCronService {
           func: task.func,
           args: task.args,
           kwargs: task.kwargs,
-          records: task.records
+          records: task.records,
         })
         .then((job) => {
           this.taskService.updateTask({
             filterFields: { id: task._id.toString() },
-            updateFields: { state: TaskStateEnum.PENDING, jobId: job.id }
+            updateFields: { state: TaskStateEnum.PENDING, jobId: job.id },
           });
         });
     });

@@ -13,7 +13,7 @@ import {
   Post,
   Query,
   UsePipes,
-  ValidationPipe
+  ValidationPipe,
 } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { TasksService } from './tasks.service';
@@ -23,7 +23,7 @@ import { TasksService } from './tasks.service';
 export class TasksController {
   constructor(
     private readonly logger: LoggerService,
-    private readonly tasksService: TasksService
+    private readonly tasksService: TasksService,
   ) {}
 
   @Get()
@@ -38,7 +38,7 @@ export class TasksController {
       func: payload.func,
       args: payload.args,
       kwargs: payload.kwargs,
-      records: payload.records
+      records: payload.records,
     });
   }
 

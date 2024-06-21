@@ -9,7 +9,7 @@ import {
   OnQueueDrained,
   OnQueueFailed,
   OnQueueWaiting,
-  Processor
+  Processor,
 } from '@nestjs/bull';
 import { Job, Queue } from 'bull';
 import { TasksService } from '../tasks.service';
@@ -19,7 +19,7 @@ export class TaskQueueProcessor {
   constructor(
     private readonly logger: LoggerService,
     @InjectQueue(ODOO_QUEUE_TASK_CHANNEL) private taskQueue: Queue,
-    private readonly taskService: TasksService
+    private readonly taskService: TasksService,
   ) {}
 
   // @Process({ concurrency: 5 })
@@ -41,7 +41,7 @@ export class TaskQueueProcessor {
     this.taskQueue.getJob(jobId).then((job: Job<OdooDoingTaskParams>) => {
       this.taskService.updateTask({
         filterFields: { id: job.data.dbId },
-        updateFields: { state: TaskStateEnum.QUEUED }
+        updateFields: { state: TaskStateEnum.QUEUED },
       });
     });
   }
@@ -51,7 +51,7 @@ export class TaskQueueProcessor {
     this.logger.log(`Job activated ${job.id}`);
     this.taskService.updateTask({
       filterFields: { id: job.data.dbId },
-      updateFields: { state: TaskStateEnum.STARTED }
+      updateFields: { state: TaskStateEnum.STARTED },
     });
   }
 
@@ -61,7 +61,7 @@ export class TaskQueueProcessor {
     job.progress(100);
     this.taskService.updateTask({
       filterFields: { id: job.data.dbId },
-      updateFields: { state: TaskStateEnum.SUCCESS }
+      updateFields: { state: TaskStateEnum.SUCCESS },
     });
   }
 
@@ -75,7 +75,7 @@ export class TaskQueueProcessor {
     this.logger.error(`Job failed ${job.id} - ${error.message}`, error.stack);
     this.taskService.updateTask({
       filterFields: { id: job.data.dbId },
-      updateFields: { state: TaskStateEnum.FAILED }
+      updateFields: { state: TaskStateEnum.FAILED },
     });
   }
 }

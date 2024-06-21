@@ -16,7 +16,7 @@ export class TasksService {
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
     // @InjectQueue(process.env.ODOO_QUEUE_TASK_CHANNEL) private taskQueue: Queue,
-    private readonly odooService: OdooService // ? should change to externalService and use Odoo as a functional service
+    private readonly odooService: OdooService, // ? should change to externalService and use Odoo as a functional service
   ) {}
 
   // ? review type Promise<TaskDocument[]>
@@ -43,9 +43,9 @@ export class TasksService {
       domain,
       {
         ...updateFields,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
-      { new: true }
+      { new: true },
     );
     return res.exec();
   }
@@ -56,7 +56,7 @@ export class TasksService {
     // * Only allow find and execute task with state DRAFT
     const res = this.taskModel.findOne({
       ...domain,
-      state: TaskStateEnum.DRAFT
+      state: TaskStateEnum.DRAFT,
     });
 
     return res.exec().then(async (task) => {
@@ -75,7 +75,7 @@ export class TasksService {
           func: task.func,
           records: task.records,
           args: task.args,
-          kwargs: task.kwargs
+          kwargs: task.kwargs,
         })
         .then((resp) => {
           this.logger.debug(`Response: ${resp}`);
@@ -83,7 +83,7 @@ export class TasksService {
             task.state = TaskStateEnum.SUCCESS;
             this.updateTask({
               filterFields: { id: task._id.toString() },
-              updateFields: { state: TaskStateEnum.SUCCESS }
+              updateFields: { state: TaskStateEnum.SUCCESS },
             });
           }
           return task;
