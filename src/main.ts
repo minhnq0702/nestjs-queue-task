@@ -18,7 +18,7 @@ async function startMicroservice(app: INestApplication, _logger: LoggerService) 
   _logger.debug('Starting connect microservice...');
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.KAFKA,
-    options: kafkaClientOptions(AppConfig)
+    options: kafkaClientOptions(AppConfig),
   });
   await app.startAllMicroservices();
   _logger.debug('Start microservices completed!!!');
@@ -26,7 +26,7 @@ async function startMicroservice(app: INestApplication, _logger: LoggerService) 
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    bufferLogs: true
+    bufferLogs: true,
   });
   const _logger: LoggerService = app.get(LoggerService);
 

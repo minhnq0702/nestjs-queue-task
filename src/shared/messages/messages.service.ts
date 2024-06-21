@@ -12,7 +12,7 @@ export class MessagesService {
   constructor(
     @InjectModel(Message.name) private msgModel: Model<Message>,
     private readonly twilioService: TwilioService,
-    private readonly logger: LoggerService
+    private readonly logger: LoggerService,
   ) {}
 
   async listMsgs(filter: FilterQuery<MessageDoc>, limit: number = null): Promise<MessageDoc[]> {
@@ -38,8 +38,8 @@ export class MessagesService {
       $currentDate: {
         // lastModified: true,
         // updatedAt: { $type: 'date' }
-        updatedAt: true
-      }
+        updatedAt: true,
+      },
     });
     return res
       .exec()
@@ -69,12 +69,12 @@ export class MessagesService {
       .sendSms({
         body: msg.content,
         to: msg.receiver,
-        from: msg.sender
+        from: msg.sender,
       })
       .then((sid) => {
         this.updateMsgs({
           filterFields: { id: msg.id },
-          updateFields: { state: MessageStateEnum.QUEUED, providerId: sid }
+          updateFields: { state: MessageStateEnum.QUEUED, providerId: sid },
         });
         return msg;
       })
@@ -83,8 +83,8 @@ export class MessagesService {
           filterFields: { id: msg.id },
           updateFields: {
             state: MessageStateEnum.FAILED,
-            failReason: err
-          }
+            failReason: err,
+          },
         });
         throw new Error(err);
       });
@@ -94,23 +94,23 @@ export class MessagesService {
     return this.listMsgs({
       $and: [
         {
-          state: MessageStateEnum.DRAFT
+          state: MessageStateEnum.DRAFT,
         },
         {
           $or: [
             {
               scheduleAt: {
-                $lt: new Date()
-              }
+                $lt: new Date(),
+              },
             },
             {
               scheduleAt: {
-                $eq: null
-              }
-            }
-          ]
-        }
-      ]
+                $eq: null,
+              },
+            },
+          ],
+        },
+      ],
     });
   }
 }

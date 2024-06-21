@@ -15,11 +15,11 @@ import { MessagesService } from './messages.service';
     MongooseModule.forFeature([{ name: Message.name, schema: MessageSchema }]),
     LoggerModule.register('MESSAGES'),
     BullModule.registerQueue({
-      name: TWILIO_QUEUE_MSG_CHANNEL
+      name: TWILIO_QUEUE_MSG_CHANNEL,
     }),
-    ExternalModule
+    ExternalModule,
   ],
   providers: [MessagesService, MessageCronService, MessageQueueProcessor],
-  controllers: [MessagesController]
+  controllers: [MessagesController],
 })
 export class MessagesModule {}

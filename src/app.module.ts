@@ -1,6 +1,8 @@
 import { AuthModule } from '@/auth/auth.module';
 import { KafkaModule } from '@/kafka/kafka.module';
 import { LoggerModule } from '@/logger/logger.module';
+import { AccountsModule } from '@/shared/accounts/accounts.module';
+import { ModuleLoader } from '@/shared/module.loader';
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -11,7 +13,6 @@ import { appConfig } from './app.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DB_CONFIG } from './constants';
-import { ModuleLoader } from './shared/module.loader';
 
 @Module({
   imports: [
@@ -25,16 +26,16 @@ import { ModuleLoader } from './shared/module.loader';
       ignoreErrors: false,
       maxListeners: 10,
       wildcard: true,
-      verboseMemoryLeak: false
+      verboseMemoryLeak: false,
     }), // TODO add event emitter for root app. Review configuartion
     MongooseModule.forRootAsync({
       useFactory: async (config: ConfigService) => ({
         uri: config.get<string>(DB_CONFIG.DB_URI),
         dbName: config.get<string>(DB_CONFIG.DB_NAME),
         user: config.get<string>(DB_CONFIG.DB_USER),
-        pass: config.get<string>(DB_CONFIG.DB_PASSWORD)
+        pass: config.get<string>(DB_CONFIG.DB_PASSWORD),
       }),
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
     // MongooseModule.forRoot('mongodb://localhost:27017/', {
     //   dbName: 'dev',
@@ -46,10 +47,10 @@ import { ModuleLoader } from './shared/module.loader';
       useFactory: async (config: ConfigService) => ({
         redis: {
           host: config.get<string>('BULL_REDIS_HOST') || 'localhost',
-          port: config.get<number>('BULL_REDIS_PORT') || 6379
-        }
+          port: config.get<number>('BULL_REDIS_PORT') || 6379,
+        },
       }),
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
     // BullModule.forRoot({
     //   redis: {
@@ -59,11 +60,12 @@ import { ModuleLoader } from './shared/module.loader';
     // }),
     KafkaModule,
     AuthModule,
-    ModuleLoader.register()
+    AccountsModule,
+    ModuleLoader.register(),
     // TasksModule,
     // MessagesModule
   ],
   providers: [AppService],
-  controllers: [AppController]
+  controllers: [AppController],
 })
 export class AppModule {}

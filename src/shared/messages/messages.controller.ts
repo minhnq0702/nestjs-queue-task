@@ -12,7 +12,7 @@ import {
   Post,
   Query,
   UsePipes,
-  ValidationPipe
+  ValidationPipe,
 } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 
@@ -21,7 +21,7 @@ import { MessagesService } from './messages.service';
 export class MessagesController {
   constructor(
     private readonly logger: LoggerService,
-    private readonly msgSvc: MessagesService
+    private readonly msgSvc: MessagesService,
   ) {}
 
   @Get()
