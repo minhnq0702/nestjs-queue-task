@@ -10,7 +10,7 @@ export enum TaskStateEnum {
   QUEUED = 'queued',
   STARTED = 'started',
   SUCCESS = 'success',
-  FAILED = 'failed'
+  FAILED = 'failed',
 }
 
 @Schema()
