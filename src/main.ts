@@ -30,6 +30,7 @@ async function bootstrap() {
   });
   const _logger: LoggerService = app.get(LoggerService);
 
+  // * define globle filter for exception
   const adapter = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionFilter(adapter, app.get(LoggerService)));
 

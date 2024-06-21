@@ -66,8 +66,4 @@ import { ModuleLoader } from './shared/module.loader';
   providers: [AppService],
   controllers: [AppController]
 })
-export class AppModule {
-  constructor() {
-    console.log('it get in constructor');
-  }
-}
+export class AppModule {}
