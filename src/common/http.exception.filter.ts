@@ -7,7 +7,7 @@ import { HttpAdapterHost } from '@nestjs/core';
 export default class AllExceptionFilter implements ExceptionFilter {
   constructor(
     private readonly httpAdapterHost: HttpAdapterHost,
-    private readonly logger: LoggerService
+    private readonly logger: LoggerService,
   ) {}
 
   catch(exception: Error, host: ArgumentsHost): void {
@@ -48,7 +48,7 @@ export default class AllExceptionFilter implements ExceptionFilter {
       code,
       error,
       message,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
       // path: httpAdapter.getRequestUrl(ctx.getRequest())
     };
     if (additional !== null) {
