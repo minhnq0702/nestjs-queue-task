@@ -27,7 +27,7 @@ export class ModuleLoader {
       module: ModuleLoader,
       imports: imports,
       providers: [],
-      exports: []
+      exports: [],
     };
   }
 }
