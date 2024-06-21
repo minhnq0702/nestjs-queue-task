@@ -2,11 +2,14 @@
 const path = require('path');
 
 module.exports = {
-  entry: path.join(__dirname, 'src/main.ts'),
+  entry: {
+    app: path.join(__dirname, 'src/main.ts'),
+    processor: './src/shared/tasks/processor.ts',
+  },
   target: 'node',
   output: {
-    filename: 'compiled.js',
     path: path.join(__dirname, 'dist'),
+    filename: '[name].js',
   },
   resolve: {
     alias: {
