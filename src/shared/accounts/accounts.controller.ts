@@ -1,7 +1,18 @@
 import { CreateAccountDto } from '@/dto';
 import { AccountDoc } from '@/entities/account.entity';
 import { LoggerService } from '@/logger/logger.service';
-import { Controller, Get, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { Payload } from '@nestjs/microservices';
 import { AccountsService } from './accounts.service';
 
@@ -21,7 +32,14 @@ export class AccountsController {
   }
 
   @Post()
-  async ctrlCreateAount(@Payload() payload: CreateAccountDto): Promise<AccountDoc> {
+  async ctrlCreateAccount(@Payload() payload: CreateAccountDto): Promise<AccountDoc> {
     return this.accSvc.createAccount(payload);
+  }
+
+  // ! Should protect this route only for admin
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async ctrlDeleteAccount(@Param('id') id: string): Promise<void> {
+    return this.accSvc.deleteAccountByIds([id]);
   }
 }
