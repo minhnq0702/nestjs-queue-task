@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 export class HttpAuthGuard implements CanActivate {
   constructor(
     private readonly logger: LoggerService,
-    private reflector: Reflector
+    private reflector: Reflector,
   ) {}
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
