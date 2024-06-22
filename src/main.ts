@@ -2,9 +2,10 @@ import { config } from 'dotenv';
 config({ path: ['.env.local', '.env'] });
 
 import AllExceptionFilter from '@/common/http.exception.filter';
+import { LoggingInterceptor } from '@/common/http.interceptor';
 import { kafkaClientOptions } from '@/kafka/utils';
 import { LoggerService } from '@/logger/logger.service';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
@@ -15,24 +16,27 @@ import { APP_PORT } from './constants';
 async function startMicroservice(app: INestApplication, _logger: LoggerService) {
   const AppConfig = app.get(ConfigService);
 
-  _logger.debug('Starting connect microservice...');
+  _logger.debug('Starting connect microservice...', 'BOOTSTRAP');
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.KAFKA,
     options: kafkaClientOptions(AppConfig),
   });
   await app.startAllMicroservices();
-  _logger.debug('Start microservices completed!!!');
+  _logger.debug('Start microservices completed!!!', 'BOOTSTRAP');
 }
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
-  const _logger: LoggerService = app.get(LoggerService);
+  const _logger: LoggerService = app.get(Logger);
 
   // * define globle filter for exception
   const adapter = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionFilter(adapter, app.get(LoggerService)));
+
+  // * define global interceptor
+  app.useGlobalInterceptors(new LoggingInterceptor(_logger));
 
   // * define global prefix
   app.setGlobalPrefix('/api');
