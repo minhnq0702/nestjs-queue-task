@@ -1,10 +1,9 @@
 import { AuthModule } from '@/auth/auth.module';
 import { KafkaModule } from '@/kafka/kafka.module';
-import { LoggerModule } from '@/logger/logger.module';
 import { AccountsModule } from '@/shared/accounts/accounts.module';
 import { ModuleLoader } from '@/shared/module.loader';
 import { BullModule } from '@nestjs/bull';
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -18,7 +17,7 @@ import { DB_CONFIG } from './constants';
   imports: [
     appConfig(), // * add app config
     ScheduleModule.forRoot(), // * add schedule module for root app, so all cron jobs in childs module can be run
-    LoggerModule.register('RootApp'), // * add logger for root app
+    // LoggerModule.register('RootApp'), // * add logger for root app
     EventEmitterModule.forRoot({
       delimiter: '.',
       newListener: false,
@@ -37,11 +36,6 @@ import { DB_CONFIG } from './constants';
       }),
       inject: [ConfigService],
     }),
-    // MongooseModule.forRoot('mongodb://localhost:27017/', {
-    //   dbName: 'dev',
-    //   user: 'root',
-    //   pass: 'root'
-    // }), // * move to factory to inject ConfigService to get env variables
     // TODO: check more configuration for bull module
     BullModule.forRootAsync({
       useFactory: async (config: ConfigService) => ({
@@ -52,20 +46,12 @@ import { DB_CONFIG } from './constants';
       }),
       inject: [ConfigService],
     }),
-    // BullModule.forRoot({
-    //   redis: {
-    //     host: 'localhost',
-    //     port: 6379
-    //   }
-    // }),
     KafkaModule,
     AuthModule,
     AccountsModule,
     ModuleLoader.register(),
-    // TasksModule,
-    // MessagesModule
   ],
-  providers: [AppService],
+  providers: [Logger, AppService],
   controllers: [AppController],
 })
 export class AppModule {}
