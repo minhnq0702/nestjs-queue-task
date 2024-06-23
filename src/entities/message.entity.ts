@@ -9,7 +9,7 @@ export enum MessageStateEnum {
   READY = 'ready',
   QUEUED = 'queued',
   STARTED = 'sent',
-  FAILED = 'failed'
+  FAILED = 'failed',
 }
 
 export type MessageAddInfo = {
@@ -24,7 +24,7 @@ export class Message extends BaseEntity {
   @Prop({ required: true })
   receiver: string;
 
-  @Prop({ default: null })
+  @Prop({ type: String, default: null })
   sender: string | null;
 
   @Prop({ default: false })
@@ -36,7 +36,7 @@ export class Message extends BaseEntity {
   @Prop({ default: MessageStateEnum.DRAFT })
   state?: string;
 
-  @Prop({ default: null })
+  @Prop({ type: String, default: null })
   failReason?: string | null;
 
   @Prop({ default: null })

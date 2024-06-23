@@ -5,7 +5,7 @@ import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { join } from 'path';
+import * as path from 'path';
 import { ODOO_CONCURRENCY, ODOO_QUEUE_TASK_CHANNEL } from './constants';
 import { TaskCronService } from './event/tasks.cron';
 import { TaskQueueProcessor } from './event/tasks.queue';
@@ -34,7 +34,8 @@ import { TasksService } from './tasks.service';
         {
           // name: 'task',
           concurrency: ODOO_CONCURRENCY || 5,
-          path: join(__dirname, '..', '..', 'external', 'odoo', 'processor.js'),
+          // path: join(__dirname, '..', '..', 'external', 'odoo', 'processor.js'),
+          path: path.resolve(__dirname, 'processor.js'),
         },
       ],
     }),

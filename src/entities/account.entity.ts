@@ -18,7 +18,7 @@ export class Account extends BaseEntity {
   @Prop({ required: false, default: null })
   role: string;
 
-  @Prop({ required: false, default: null })
+  @Prop({ type: String, required: false, default: null })
   phone?: string | null;
 
   @Prop({ required: false, default: true })
