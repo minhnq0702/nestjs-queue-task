@@ -63,7 +63,6 @@ export class TasksService {
       if (!task) {
         throw new TaskNotFound();
       }
-      this.logger.debug(`# TODO: Execute task ${task._id}`);
       return this.odooService
         .callDoingTask({
           dbId: task._id.toString(),
@@ -78,7 +77,6 @@ export class TasksService {
           kwargs: task.kwargs,
         })
         .then((resp) => {
-          this.logger.debug(`Response: ${resp}`);
           if (resp === 'successfully') {
             task.state = TaskStateEnum.SUCCESS;
             this.updateTask({

@@ -1,10 +1,8 @@
 import { OdooDoingTaskParams } from '@/dto/event/odoo.doing.task.dto';
-import { DoneCallback, Job } from 'bull';
 
-export default function (job: Job<OdooDoingTaskParams>, cb: DoneCallback) {
-  const taskParams = job.data;
+export default async (taskParams: OdooDoingTaskParams) => {
   const url = `${taskParams.url}?db=${taskParams.db}`;
-  fetch(`${url}`, {
+  return fetch(`${url}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -16,25 +14,21 @@ export default function (job: Job<OdooDoingTaskParams>, cb: DoneCallback) {
       args: taskParams.args,
       kwargs: taskParams.kwargs,
     }),
-  }).then(
-    async (res) => {
-      // ? how to log this?
-      // this.logger.debug(`Response: ${res.status} ${res.statusText}`);
+  })
+    .then(async (res) => {
       const { status, statusText } = res;
       const respText = await res.text();
       if (status !== 200) {
-        cb(new Error(`Error: ${status} ${statusText} ${respText}`));
+        throw new Error(`Error: ${status} ${statusText} ${respText}`);
       }
       if (respText === 'successfully') {
-        cb(null, taskParams.dbId);
+        return Promise.resolve(taskParams.dbId);
+        // return taskParams.dbId;
       } else {
-        cb(new Error('Task failed'));
+        throw new Error(`Task failed ${respText}`);
       }
-      // return res.text();
-    },
-    async (err) => {
-      cb(new Error(`Task failed ${err}`));
-      // return err;
-    },
-  );
-}
+    })
+    .catch((err) => {
+      throw new Error(`Task failed ${err}`);
+    });
+};
