@@ -22,15 +22,15 @@ export class OdooService {
     return fetch(`${url}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         model: taskParams.model,
         func: taskParams.func,
         records: taskParams.records,
         args: taskParams.args,
-        kwargs: taskParams.kwargs
-      })
+        kwargs: taskParams.kwargs,
+      }),
     }).then((res) => {
       this.logger.debug(`Response: ${res.status} ${res.statusText}`);
       // TODO: fix handle error
