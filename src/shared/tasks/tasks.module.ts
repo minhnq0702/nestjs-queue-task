@@ -35,7 +35,7 @@ import { TasksService } from './tasks.service';
           // name: 'task',
           concurrency: ODOO_CONCURRENCY || 5,
           // path: join(__dirname, '..', '..', 'external', 'odoo', 'processor.js'),
-          path: path.resolve(__dirname, 'processor.js'),
+          path: path.resolve(__dirname, 'tasks.processor.js'),
         },
       ],
     }),

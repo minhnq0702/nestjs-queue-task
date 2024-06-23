@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = {
   entry: {
     app: path.join(__dirname, 'src/main.ts'),
-    processor: './src/shared/tasks/processor.ts',
+    'tasks.processor': './src/shared/tasks/tasks.processor.ts',
   },
   target: 'node',
   output: {
