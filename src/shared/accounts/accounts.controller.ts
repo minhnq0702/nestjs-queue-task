@@ -40,6 +40,6 @@ export class AccountsController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async ctrlDeleteAccount(@Param('id') id: string): Promise<void> {
-    return this.accSvc.deleteAccountByIds([id]);
+    return this.accSvc.deleteAccountById(id);
   }
 }

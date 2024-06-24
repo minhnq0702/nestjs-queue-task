@@ -29,7 +29,7 @@ export class AccountsService {
     });
   }
 
-  async deleteAccountByIds(accountIds: string[]): Promise<void> {
-    await this.accModel.deleteMany({ _id: { $in: accountIds } });
+  async deleteAccountById(accountId: string): Promise<void> {
+    await this.accModel.deleteOne({ _id: accountId });
   }
 }
