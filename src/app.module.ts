@@ -33,6 +33,7 @@ import { DB_CONFIG } from './constants';
         dbName: config.get<string>(DB_CONFIG.DB_NAME),
         user: config.get<string>(DB_CONFIG.DB_USER),
         pass: config.get<string>(DB_CONFIG.DB_PASSWORD),
+        // maxPoolSize: 100, // TODO review amount of connection pool
       }),
       inject: [ConfigService],
     }),

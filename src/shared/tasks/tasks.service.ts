@@ -43,7 +43,9 @@ export class TasksService {
       domain,
       {
         ...updateFields,
-        updatedAt: new Date(),
+        $currentDate: {
+          updatedAt: true,
+        },
       },
       { new: true },
     );
