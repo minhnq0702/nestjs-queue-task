@@ -6,7 +6,10 @@ export type AccountDoc = HydratedDocument<Account>;
 
 @Schema()
 export class Account extends BaseEntity {
-  @Prop({ required: false, default: null, unique: true })
+  @Prop({
+    required: false,
+    index: { unique: true, partialFilterExpression: { account: { $exists: true } } },
+  })
   account: string;
 
   @Prop({ required: true, unique: true })
@@ -26,3 +29,4 @@ export class Account extends BaseEntity {
 }
 
 export const AccountSchema = SchemaFactory.createForClass(Account);
+// AccountSchema.index({ account: 'hashed' }, { unique: true });
