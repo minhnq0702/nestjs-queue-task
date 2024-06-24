@@ -27,6 +27,8 @@ export class CreateAccountDto {
   )
   password: string;
 
+  @IsString()
+  @IsOptional()
   account: string;
 
   @IsString()

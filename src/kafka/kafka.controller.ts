@@ -1,5 +1,5 @@
 import { EMIT_CREATE_TASK } from '@/constants';
-import { TaskDto } from '@/dto/task.dto';
+import { OdooCreateTaskDto } from '@/dto/task.dto';
 import { Task } from '@/entities/task.entity';
 import { Controller, Inject, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -18,7 +18,7 @@ export class KafkaController {
   @EventPattern(KAFKA_ODOO_TOPIC) // ! use eventpattern instead of messagepattern for no reply needed
   @UsePipes(ValidationPipe)
   @UseFilters(KafkaFilter)
-  async OdooQueueJobTopic(@Payload() task: TaskDto, @Ctx() ctx: KafkaContext) {
+  async OdooQueueJobTopic(@Payload() task: OdooCreateTaskDto, @Ctx() ctx: KafkaContext) {
     const _t = plainToInstance(Task, task);
     const heartbeat = ctx.getHeartbeat();
     await this.emitEvent.emitAsync(EMIT_CREATE_TASK, _t); // * do not inject taskSvc here in order to get rid of dependency injection here
