@@ -29,4 +29,3 @@ export class Account extends BaseEntity {
 }
 
 export const AccountSchema = SchemaFactory.createForClass(Account);
-// AccountSchema.index({ account: 'hashed' }, { unique: true });
