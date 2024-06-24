@@ -54,7 +54,7 @@ export class TasksController {
   @Post(':id/execute')
   @HttpCode(HttpStatus.ACCEPTED)
   async ctrlExecuteTaskById(@Param('id') id: string): Promise<TaskDoc> {
-    return await this.tasksService.executeTaskDirectly({ filterFields: { id } });
+    return await this.tasksService.executeTaskDirectly(id);
   }
 
   @OnEvent(EMIT_CREATE_TASK, { async: true })
