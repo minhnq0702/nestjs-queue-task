@@ -26,7 +26,7 @@ import { DB_CONFIG } from './constants';
       maxListeners: 10,
       wildcard: true,
       verboseMemoryLeak: false,
-    }), // TODO add event emitter for root app. Review configuartion
+    }),
     MongooseModule.forRootAsync({
       useFactory: async (config: ConfigService) => ({
         uri: config.get<string>(DB_CONFIG.DB_URI),
