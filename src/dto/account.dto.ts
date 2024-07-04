@@ -45,3 +45,11 @@ export class LoginDto {
   @IsNotEmpty()
   password: string;
 }
+
+export class SignPayloadDto {
+  email: string;
+
+  account: string | null;
+
+  role: string | null;
+}
