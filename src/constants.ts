@@ -20,4 +20,6 @@ export const ODOO_CONFIG = {
   ODOO_HTTP_PASSWORD: 'ODOO_HTTP_PASSWORD',
 };
 
+export const JWT_SECRET = 'JWT_SECRET';
+
 export const EMIT_CREATE_TASK = 'task.do.create';
