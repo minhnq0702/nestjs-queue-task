@@ -7,6 +7,7 @@ export class MyException extends Error {
   additional?: object | null;
   constructor(options?: object | string) {
     super();
+    this.httpStatus = STATUS.INTERNAL_SERVER_ERROR;
     if (typeof options === 'string') {
       this.message = options;
     } else if (typeof options === 'object') {
@@ -21,11 +22,15 @@ export class NotFound extends MyException {
   error = 'NOT_FOUND';
 }
 
-export class TaskNotFound extends MyException {
+export class AccountNotFound extends NotFound {
+  error = 'ACCOUNT_NOT_FOUND';
+}
+
+export class TaskNotFound extends NotFound {
   error = 'TASK_NOT_FOUND';
 }
 
-export class MsgNotFound extends MyException {
+export class MsgNotFound extends NotFound {
   error = 'MSG_NOT_FOUND';
 }
 
