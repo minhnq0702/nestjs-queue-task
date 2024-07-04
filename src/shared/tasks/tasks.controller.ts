@@ -1,5 +1,5 @@
 import { EMIT_CREATE_TASK } from '@/constants';
-import { TaskDto } from '@/dto/task.dto';
+import { OdooCreateTaskDto } from '@/dto/task.dto';
 import { TaskNotFound } from '@/entities/error.entity';
 import { Task, TaskDoc } from '@/entities/task.entity';
 import { LoggerService } from '@/logger/logger.service';
@@ -32,13 +32,14 @@ export class TasksController {
   }
 
   @Post()
-  async ctrlCreateTask(@Body() payload: TaskDto): Promise<TaskDoc> {
+  async ctrlCreateTask(@Body() payload: OdooCreateTaskDto): Promise<TaskDoc> {
     return this.tasksService.createTask({
       model: payload.model,
       func: payload.func,
       args: payload.args,
       kwargs: payload.kwargs,
       records: payload.records,
+      executeUrl: payload.executeUrl,
     });
   }
 
@@ -54,7 +55,7 @@ export class TasksController {
   @Post(':id/execute')
   @HttpCode(HttpStatus.ACCEPTED)
   async ctrlExecuteTaskById(@Param('id') id: string): Promise<TaskDoc> {
-    return await this.tasksService.executeTaskDirectly({ filterFields: { id } });
+    return await this.tasksService.executeTaskDirectly(id);
   }
 
   @OnEvent(EMIT_CREATE_TASK, { async: true })

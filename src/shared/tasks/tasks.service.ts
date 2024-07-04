@@ -43,7 +43,9 @@ export class TasksService {
       domain,
       {
         ...updateFields,
-        updatedAt: new Date(),
+        $currentDate: {
+          updatedAt: true,
+        },
       },
       { new: true },
     );
@@ -51,13 +53,9 @@ export class TasksService {
   }
 
   /** Execute task: Request to external service to execute queued task (Odoo, etc..) */
-  async executeTaskDirectly({ filterFields }: TaskOperation): Promise<TaskDoc> {
-    const domain = GetDomain(filterFields);
+  async executeTaskDirectly(taskId: string): Promise<TaskDoc> {
     // * Only allow find and execute task with state DRAFT
-    const res = this.taskModel.findOne({
-      ...domain,
-      state: TaskStateEnum.DRAFT,
-    });
+    const res = this.taskModel.findById(taskId);
 
     return res.exec().then(async (task) => {
       if (!task) {
@@ -76,14 +74,21 @@ export class TasksService {
           args: task.args,
           kwargs: task.kwargs,
         })
-        .then((resp) => {
-          if (resp === 'successfully') {
-            task.state = TaskStateEnum.SUCCESS;
-            this.updateTask({
-              filterFields: { id: task._id.toString() },
-              updateFields: { state: TaskStateEnum.SUCCESS },
-            });
-          }
+        .then(() => {
+          task.state = TaskStateEnum.SUCCESS;
+          this.updateTask({
+            filterFields: { id: task._id.toString() },
+            updateFields: { state: TaskStateEnum.SUCCESS },
+          });
+          return task;
+        })
+        .catch((err) => {
+          this.logger.error(`Task ${task._id.toString()} failed`, err.stack);
+          task.state = TaskStateEnum.FAILED;
+          this.updateTask({
+            filterFields: { id: task._id.toString() },
+            updateFields: { state: TaskStateEnum.FAILED },
+          });
           return task;
         });
     });

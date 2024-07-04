@@ -26,13 +26,14 @@ import { DB_CONFIG } from './constants';
       maxListeners: 10,
       wildcard: true,
       verboseMemoryLeak: false,
-    }), // TODO add event emitter for root app. Review configuartion
+    }),
     MongooseModule.forRootAsync({
       useFactory: async (config: ConfigService) => ({
         uri: config.get<string>(DB_CONFIG.DB_URI),
         dbName: config.get<string>(DB_CONFIG.DB_NAME),
         user: config.get<string>(DB_CONFIG.DB_USER),
         pass: config.get<string>(DB_CONFIG.DB_PASSWORD),
+        // maxPoolSize: 100, // TODO review amount of connection pool
       }),
       inject: [ConfigService],
     }),

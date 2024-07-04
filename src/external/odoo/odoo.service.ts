@@ -1,6 +1,7 @@
 import { OdooDoingTaskParams } from '@/dto/event/odoo.doing.task.dto';
 import { LoggerService } from '@/logger/logger.service';
 import { Injectable } from '@nestjs/common';
+import odooExecutor from './odoo.executor';
 
 @Injectable()
 export class OdooService {
@@ -18,23 +19,6 @@ export class OdooService {
       \t- args: ${taskParams.args} 
       \t- kwargs: ${taskParams.kwargs}
     `);
-    const url = `${taskParams.url}?db=${taskParams.db}`;
-    return fetch(`${url}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: taskParams.model,
-        func: taskParams.func,
-        records: taskParams.records,
-        args: taskParams.args,
-        kwargs: taskParams.kwargs,
-      }),
-    }).then((res) => {
-      this.logger.debug(`Response: ${res.status} ${res.statusText}`);
-      // TODO: fix handle error
-      return res.text();
-    });
+    return odooExecutor(taskParams);
   }
 }

@@ -4,7 +4,7 @@ import { LoggerService } from '@/logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { MongoServerError } from 'mongodb';
-import { FilterQuery, Model } from 'mongoose';
+import { FilterQuery, Model, UpdateQuery } from 'mongoose';
 
 @Injectable()
 export class AccountsService {
@@ -18,6 +18,10 @@ export class AccountsService {
     return res.exec();
   }
 
+  async getAccount(filter: FilterQuery<AccountDoc>): Promise<AccountDoc> {
+    return this.accModel.findOne(filter).exec();
+  }
+
   async createAccount(account: Account): Promise<AccountDoc> {
     return this.accModel.create(account).catch((err: MongoServerError) => {
       if (!(err instanceof MongoServerError)) throw err;
@@ -29,7 +33,17 @@ export class AccountsService {
     });
   }
 
-  async deleteAccountByIds(accountIds: string[]): Promise<void> {
-    await this.accModel.deleteMany({ _id: { $in: accountIds } });
+  async updateAccount(filter: FilterQuery<AccountDoc>, updateQuery: UpdateQuery<AccountDoc>): Promise<AccountDoc> {
+    this.accModel.findOneAndUpdate(filter, {
+      ...updateQuery,
+      $currentDate: {
+        updatedAt: true,
+      },
+    });
+    return null;
+  }
+
+  async deleteAccountById(accountId: string): Promise<void> {
+    await this.accModel.deleteOne({ _id: accountId });
   }
 }

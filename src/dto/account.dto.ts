@@ -1,4 +1,4 @@
-import { IsEmail, IsOptional, IsString, IsStrongPassword } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, IsStrongPassword } from 'class-validator';
 
 export class CreateAccountDto {
   @IsEmail(
@@ -27,9 +27,29 @@ export class CreateAccountDto {
   )
   password: string;
 
+  @IsString()
+  @IsOptional()
   account: string;
 
   @IsString()
   @IsOptional()
   role: string;
+}
+
+export class LoginDto {
+  @IsString()
+  @IsNotEmpty()
+  login: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+}
+
+export class SignPayloadDto {
+  email: string;
+
+  account: string | null;
+
+  role: string | null;
 }

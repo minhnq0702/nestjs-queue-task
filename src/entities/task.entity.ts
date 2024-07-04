@@ -33,6 +33,9 @@ export class Task extends BaseEntity {
   @Prop({ default: '' })
   records: string;
 
+  @Prop({ type: String, required: true })
+  executeUrl: string;
+
   @Prop()
   jobId?: string;
 }
