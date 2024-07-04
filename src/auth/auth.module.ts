@@ -1,12 +1,13 @@
 import { HttpAuthGuard } from '@/common/http.auth.guard';
 import { LoggerModule } from '@/logger/logger.module';
+import { AccountsModule } from '@/shared/accounts/accounts.module';
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 
 @Module({
-  imports: [LoggerModule.register('Auth')],
+  imports: [LoggerModule.register('Auth'), AccountsModule],
   providers: [
     AuthService,
     {

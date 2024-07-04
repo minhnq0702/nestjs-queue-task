@@ -2,6 +2,7 @@ import { CreateAccountDto } from '@/dto';
 import { AccountDoc } from '@/entities/account.entity';
 import { LoggerService } from '@/logger/logger.service';
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -13,7 +14,6 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { Payload } from '@nestjs/microservices';
 import { AccountsService } from './accounts.service';
 
 @Controller('accounts')
@@ -32,7 +32,7 @@ export class AccountsController {
   }
 
   @Post()
-  async ctrlCreateAccount(@Payload() payload: CreateAccountDto): Promise<AccountDoc> {
+  async ctrlCreateAccount(@Body() payload: CreateAccountDto): Promise<AccountDoc> {
     return this.accSvc.createAccount(payload);
   }
 

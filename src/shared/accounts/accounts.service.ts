@@ -18,6 +18,10 @@ export class AccountsService {
     return res.exec();
   }
 
+  async getAccount(filter: FilterQuery<AccountDoc>): Promise<AccountDoc> {
+    return this.accModel.findOne(filter).exec();
+  }
+
   async createAccount(account: Account): Promise<AccountDoc> {
     return this.accModel.create(account).catch((err: MongoServerError) => {
       if (!(err instanceof MongoServerError)) throw err;
