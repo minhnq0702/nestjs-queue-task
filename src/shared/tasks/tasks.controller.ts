@@ -27,7 +27,7 @@ export class TasksController {
   ) {}
 
   @Get()
-  async ctrlListTasks(@Query('limit') limit: number): Promise<Task[]> {
+  async ctrlListTasks(@Query('limit') limit: number): Promise<TaskDoc[]> {
     return this.tasksService.listTasks({ filterFields: {}, limit });
   }
 
