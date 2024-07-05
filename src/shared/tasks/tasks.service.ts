@@ -19,7 +19,6 @@ export class TasksService {
     private readonly odooService: OdooService, // ? should change to externalService and use Odoo as a functional service
   ) {}
 
-  // ? review type Promise<TaskDocument[]>
   async listTasks({ filterFields, limit = null }: TaskOperation): Promise<TaskDoc[]> {
     const domain = GetDomain(filterFields);
     const res = this.taskModel.find<TaskDoc>(domain, {}, { limit: limit, sort: { createdAt: 'desc' } });
