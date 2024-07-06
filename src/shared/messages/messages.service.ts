@@ -1,3 +1,4 @@
+import { paginate, PaginateQuery } from '@/common/paginate/paginate';
 import { GetDomain } from '@/entities/base.entity';
 import { MsgNotFound } from '@/entities/error.entity';
 import { Message, MessageDoc, MessageOperation, MessageStateEnum } from '@/entities/message.entity';
@@ -15,6 +16,16 @@ export class MessagesService {
     private readonly logger: LoggerService,
   ) {}
 
+  async pagiation(filter: FilterQuery<MessageDoc>, paginateQuery: PaginateQuery): Promise<[MessageDoc[], number]> {
+    return paginate<MessageDoc, Message>(this.msgModel, filter, paginateQuery);
+  }
+
+  /**
+   * List messages with filter and limit
+   * @param filter MongoFilterQuery
+   * @param limit
+   * @returns
+   */
   async listMsgs(filter: FilterQuery<MessageDoc>, limit: number = null): Promise<MessageDoc[]> {
     const res = this.msgModel.find(filter, {}, { limit: limit, sort: { createdAt: 'desc' } });
     return res.exec();
@@ -24,10 +35,13 @@ export class MessagesService {
     return this.msgModel.create(task);
   }
 
-  /** Get one message filtered by condition */
-  async getMsg({ filterFields }: MessageOperation): Promise<MessageDoc> {
-    const domain = GetDomain(filterFields);
-    const res = this.msgModel.findOne(domain);
+  /**
+   * Get one message filtered by condition
+   * @param filter MongoFilterQuery
+   * @returns
+   */
+  async getMsg(filter: FilterQuery<MessageDoc>): Promise<MessageDoc> {
+    const res = this.msgModel.findOne(filter);
     return res.exec();
   }
 

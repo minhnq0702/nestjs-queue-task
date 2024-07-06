@@ -1,3 +1,4 @@
+import { PaginateResponse, Pagination } from '@/common/paginate/paginate';
 import { CreateAccountDto } from '@/dto';
 import { AccountDoc } from '@/entities/account.entity';
 import { LoggerService } from '@/logger/logger.service';
@@ -25,10 +26,19 @@ export class AccountsController {
   ) {}
 
   @Get()
-  async ctrlListAccount(@Query('limit') limit: number, @Query('sort') sort: string[]): Promise<AccountDoc[]> {
+  @Pagination()
+  async ctrlListAccount(
+    @Query('limit') limit: number,
+    @Query('page') page: number,
+  ): Promise<PaginateResponse<AccountDoc>> {
     // TODO: update sort query
-    this.logger.debug(`List accounts with limit ${sort}`);
-    return this.accSvc.listAccounts({}, limit);
+    return this.accSvc.pagination({}, { limit, page }).then(([data, count]) => {
+      return {
+        data,
+        count: data.length,
+        total: count,
+      };
+    });
   }
 
   @Post()
