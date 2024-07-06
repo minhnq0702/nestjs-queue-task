@@ -1,3 +1,4 @@
+import { paginate, PaginateQuery } from '@/common/paginate/paginate';
 import { ODOO_CONFIG } from '@/constants';
 import { GetDomain } from '@/entities/base.entity';
 import { TaskNotFound } from '@/entities/error.entity';
@@ -7,7 +8,7 @@ import { LoggerService } from '@/logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 
 @Injectable()
 export class TasksService {
@@ -19,9 +20,12 @@ export class TasksService {
     private readonly odooService: OdooService, // ? should change to externalService and use Odoo as a functional service
   ) {}
 
-  async listTasks({ filterFields, limit = null }: TaskOperation): Promise<TaskDoc[]> {
-    const domain = GetDomain(filterFields);
-    const res = this.taskModel.find<TaskDoc>(domain, {}, { limit: limit, sort: { createdAt: 'desc' } });
+  async pagiation(filter: FilterQuery<TaskDoc>, paginateQuery: PaginateQuery): Promise<[TaskDoc[], number]> {
+    return paginate<TaskDoc, Task>(this.taskModel, filter, paginateQuery);
+  }
+
+  async listTasks(filter: FilterQuery<TaskDoc>, limit: number = null): Promise<TaskDoc[]> {
+    const res = this.taskModel.find<TaskDoc>(filter, {}, { limit: limit, sort: { createdAt: 'desc' } });
     return res.exec();
   }
 

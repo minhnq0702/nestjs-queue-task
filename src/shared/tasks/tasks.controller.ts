@@ -1,3 +1,4 @@
+import { PaginateResponse, Pagination } from '@/common/paginate/paginate';
 import { EMIT_CREATE_TASK } from '@/constants';
 import { OdooCreateTaskDto } from '@/dto/task.dto';
 import { TaskNotFound } from '@/entities/error.entity';
@@ -27,8 +28,15 @@ export class TasksController {
   ) {}
 
   @Get()
-  async ctrlListTasks(@Query('limit') limit: number): Promise<TaskDoc[]> {
-    return this.tasksService.listTasks({ filterFields: {}, limit });
+  @Pagination()
+  async ctrlListTasks(@Query('limit') limit: number): Promise<PaginateResponse<TaskDoc>> {
+    return this.tasksService.pagiation({}, { limit }).then(([data, count]) => {
+      return {
+        data,
+        count: data.length,
+        total: count,
+      };
+    });
   }
 
   @Post()
