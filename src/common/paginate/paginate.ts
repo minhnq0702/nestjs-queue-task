@@ -7,6 +7,7 @@ export const Pagination = () => SetMetadata(IS_PAGINATION, true);
 export type PaginateQuery = {
   page?: number;
   limit?: number;
+  lastId?: string; // ! Prepare for cursor-based pagination
 };
 
 export type PaginateResult<T> = [T[], number];
