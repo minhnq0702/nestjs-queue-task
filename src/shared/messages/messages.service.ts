@@ -1,12 +1,11 @@
 import { paginate, PaginateQuery } from '@/common/paginate/paginate';
-import { GetDomain } from '@/entities/base.entity';
 import { MsgNotFound } from '@/entities/error.entity';
-import { Message, MessageDoc, MessageOperation, MessageStateEnum } from '@/entities/message.entity';
+import { Message, MessageDoc, MessageStateEnum } from '@/entities/message.entity';
 import { TwilioService } from '@/external/twilio/sms.service';
 import { LoggerService } from '@/logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model } from 'mongoose';
+import { FilterQuery, Model, UpdateQuery } from 'mongoose';
 
 @Injectable()
 export class MessagesService {
@@ -45,9 +44,8 @@ export class MessagesService {
     return res.exec();
   }
 
-  async updateMsgs({ filterFields, updateFields }: MessageOperation): Promise<number> {
-    const domain = GetDomain(filterFields);
-    const res = this.msgModel.updateMany(domain, {
+  async updateMsgs(filter: FilterQuery<MessageDoc>, updateFields: UpdateQuery<MessageDoc>): Promise<number> {
+    const res = this.msgModel.updateMany(filter, {
       ...updateFields,
       $currentDate: {
         // lastModified: true,
@@ -86,20 +84,22 @@ export class MessagesService {
         from: msg.sender,
       })
       .then((sid) => {
-        this.updateMsgs({
-          filterFields: { id: msg.id },
-          updateFields: { state: MessageStateEnum.QUEUED, providerId: sid },
-        });
+        this.updateMsgs(
+          {
+            id: msg.id,
+          },
+          { state: MessageStateEnum.QUEUED, providerId: sid },
+        );
         return msg;
       })
       .catch((err) => {
-        this.updateMsgs({
-          filterFields: { id: msg.id },
-          updateFields: {
+        this.updateMsgs(
+          { id: msg.id },
+          {
             state: MessageStateEnum.FAILED,
             failReason: err,
           },
-        });
+        );
         throw new Error(err);
       });
   }
