@@ -1,3 +1,4 @@
+import { paginate, PaginateQuery, PaginateResult } from '@/common/paginate/paginate';
 import { Account, AccountDoc } from '@/entities/account.entity';
 import { AccountAlreadyExist } from '@/entities/error.entity';
 import { LoggerService } from '@/logger/logger.service';
@@ -12,6 +13,10 @@ export class AccountsService {
     @InjectModel(Account.name) private accModel: Model<Account>,
     private readonly logger: LoggerService,
   ) {}
+
+  async pagination(query: FilterQuery<AccountDoc>, paginateQuery: PaginateQuery): Promise<PaginateResult<AccountDoc>> {
+    return paginate<AccountDoc, Account>(this.accModel, query, paginateQuery);
+  }
 
   async listAccounts(filter: FilterQuery<AccountDoc>, limit: number = null): Promise<AccountDoc[]> {
     const res = this.accModel.find(filter, {}, { limit: limit });
