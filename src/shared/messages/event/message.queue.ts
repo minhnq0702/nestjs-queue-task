@@ -11,7 +11,7 @@ export class MessageQueueProcessor {
   constructor(
     private readonly logger: LoggerService,
     private readonly twilioSvc: TwilioService,
-    private readonly msgSvc: MessagesService
+    private readonly msgSvc: MessagesService,
   ) {}
 
   @Process({ name: 'send-msg', concurrency: TWILIO_QUEUE_MSG_CONCURRENCY || 300 })
@@ -21,7 +21,7 @@ export class MessageQueueProcessor {
       const sid = await this.twilioSvc.sendSms({
         body: job.data.content,
         to: job.data.receiver,
-        from: job.data.sender
+        from: job.data.sender,
       });
       return sid;
     } catch (error) {
@@ -32,15 +32,15 @@ export class MessageQueueProcessor {
   @OnQueueCompleted()
   async onCompletedTask(job: Job<MessageDoc>, result: string) {
     // this.logger.log(`[${process.pid}] Job completed ${job.id} - ${result}`);
-    await this.msgSvc.updateMsgs({
-      filterFields: { id: job.data._id.toString() },
-      updateFields: {
+    await this.msgSvc.updateMsgs(
+      { id: job.data._id.toString() },
+      {
         state: MessageStateEnum.QUEUED,
         providerId: result,
         failReason: null,
-        addInfo: { executeDuration: job.finishedOn - job.processedOn }
-      }
-    });
+        addInfo: { executeDuration: job.finishedOn - job.processedOn },
+      },
+    );
     // job.progress(100);
   }
 
@@ -55,16 +55,16 @@ export class MessageQueueProcessor {
       error.message.startsWith('timeout of') ||
       error.message.startsWith('Client network socket disconnected before secure')
     ) {
-      await this.msgSvc.updateMsgs({
-        filterFields: { id: job.data._id.toString() },
-        updateFields: { state: MessageStateEnum.DRAFT, failReason: error.message }
-      });
+      await this.msgSvc.updateMsgs(
+        { id: job.data._id.toString() },
+        { state: MessageStateEnum.DRAFT, failReason: error.message },
+      );
       return;
     } else {
-      this.msgSvc.updateMsgs({
-        filterFields: { id: job.data._id.toString() },
-        updateFields: { state: MessageStateEnum.FAILED, failReason: error.message }
-      });
+      this.msgSvc.updateMsgs(
+        { id: job.data._id.toString() },
+        { state: MessageStateEnum.FAILED, failReason: error.message },
+      );
     }
   }
 }

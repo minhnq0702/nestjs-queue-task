@@ -39,30 +39,21 @@ export class TaskQueueProcessor {
   async onQueuedTask(jobId: number | string) {
     this.logger.log(`Job queued ${jobId}`);
     this.taskQueue.getJob(jobId).then((job: Job<OdooDoingTaskParams>) => {
-      this.taskService.updateTask({
-        filterFields: { id: job.data.dbId },
-        updateFields: { state: TaskStateEnum.QUEUED },
-      });
+      this.taskService.updateTask({ id: job.data.dbId }, { state: TaskStateEnum.QUEUED });
     });
   }
 
   @OnQueueActive()
   async onActiveTask(job: Job<OdooDoingTaskParams>) {
     this.logger.log(`Job activated ${job.id}`);
-    this.taskService.updateTask({
-      filterFields: { id: job.data.dbId },
-      updateFields: { state: TaskStateEnum.STARTED },
-    });
+    this.taskService.updateTask({ id: job.data.dbId }, { state: TaskStateEnum.STARTED });
   }
 
   @OnQueueCompleted()
   async onCompletedTask(job: Job<OdooDoingTaskParams>, result: any) {
     this.logger.log(`Job completed ${job.id} - ${result}`);
     job.progress(100);
-    this.taskService.updateTask({
-      filterFields: { id: job.data.dbId },
-      updateFields: { state: TaskStateEnum.SUCCESS },
-    });
+    this.taskService.updateTask({ id: job.data.dbId }, { state: TaskStateEnum.SUCCESS });
   }
 
   @OnQueueDrained()
@@ -73,9 +64,6 @@ export class TaskQueueProcessor {
   @OnQueueFailed()
   async onFailedTask(job: Job<OdooDoingTaskParams>, error: Error) {
     this.logger.error(`Job failed ${job.id} - ${error.message}`, error.stack);
-    this.taskService.updateTask({
-      filterFields: { id: job.data.dbId },
-      updateFields: { state: TaskStateEnum.FAILED },
-    });
+    this.taskService.updateTask({ id: job.data.dbId }, { state: TaskStateEnum.FAILED });
   }
 }

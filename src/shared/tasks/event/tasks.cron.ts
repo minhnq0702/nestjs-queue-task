@@ -44,10 +44,7 @@ export class TaskCronService {
           records: task.records,
         })
         .then((job) => {
-          this.taskService.updateTask({
-            filterFields: { id: task._id.toString() },
-            updateFields: { state: TaskStateEnum.PENDING, jobId: job.id },
-          });
+          this.taskService.updateTask({ id: task._id.toString() }, { state: TaskStateEnum.PENDING, jobId: job.id });
         });
     });
   }

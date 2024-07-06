@@ -12,7 +12,7 @@ export class MessageCronService {
   constructor(
     private readonly logger: LoggerService,
     @InjectQueue(TWILIO_QUEUE_MSG_CHANNEL) private msgQueue: Queue,
-    private readonly msgSvc: MessagesService
+    private readonly msgSvc: MessagesService,
   ) {}
 
   @Cron(CronExpression.EVERY_5_SECONDS)
@@ -28,14 +28,14 @@ export class MessageCronService {
 
     // * Update msgs to READY right time prepare to send
     return this.msgSvc
-      .updateMsgs({
-        filterFields: {
-          id: { $in: msgs.map((msg) => msg._id.toString()) }
+      .updateMsgs(
+        {
+          id: { $in: msgs.map((msg) => msg._id.toString()) },
         },
-        updateFields: {
-          state: MessageStateEnum.READY
-        }
-      })
+        {
+          state: MessageStateEnum.READY,
+        },
+      )
       .then(() => msgs.map((msg) => this.msgQueue.add('send-msg', msg)))
       .catch((err) => this.logger.error(`Error on update message to ready before sent ${err}`, err.stack));
   }
