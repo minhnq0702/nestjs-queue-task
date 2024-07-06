@@ -44,12 +44,10 @@ export class MessagesService {
     return res.exec();
   }
 
-  async updateMsgs(filter: FilterQuery<MessageDoc>, updateFields: UpdateQuery<MessageDoc>): Promise<number> {
+  async updateMsgs(filter: FilterQuery<MessageDoc>, update: UpdateQuery<MessageDoc>): Promise<number> {
     const res = this.msgModel.updateMany(filter, {
-      ...updateFields,
+      ...update,
       $currentDate: {
-        // lastModified: true,
-        // updatedAt: { $type: 'date' }
         updatedAt: true,
       },
     });
@@ -92,8 +90,8 @@ export class MessagesService {
         );
         return msg;
       })
-      .catch((err) => {
-        this.updateMsgs(
+      .catch(async (err) => {
+        await this.updateMsgs(
           { id: msg.id },
           {
             state: MessageStateEnum.FAILED,

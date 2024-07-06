@@ -1,14 +1,13 @@
 import { paginate, PaginateQuery } from '@/common/paginate/paginate';
 import { ODOO_CONFIG } from '@/constants';
-import { GetDomain } from '@/entities/base.entity';
 import { TaskNotFound } from '@/entities/error.entity';
-import { Task, TaskDoc, TaskOperation, TaskStateEnum } from '@/entities/task.entity';
+import { Task, TaskDoc, TaskStateEnum } from '@/entities/task.entity';
 import { OdooService } from '@/external/odoo/odoo.service';
 import { LoggerService } from '@/logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model } from 'mongoose';
+import { FilterQuery, Model, UpdateQuery } from 'mongoose';
 
 @Injectable()
 export class TasksService {
@@ -34,18 +33,16 @@ export class TasksService {
   }
 
   /** Get task filtered by id */
-  async getTask({ filterFields }: TaskOperation): Promise<TaskDoc> {
-    const domain = GetDomain(filterFields);
-    const res = this.taskModel.findOne(domain);
+  async getTask(filter: FilterQuery<TaskDoc>): Promise<TaskDoc> {
+    const res = this.taskModel.findOne(filter);
     return res.exec();
   }
 
-  async updateTask({ filterFields, updateFields }: TaskOperation): Promise<TaskDoc> {
-    const domain = GetDomain(filterFields);
+  async updateTask(filter: FilterQuery<TaskDoc>, update: UpdateQuery<TaskDoc>): Promise<TaskDoc> {
     const res = this.taskModel.findOneAndUpdate(
-      domain,
+      filter,
       {
-        ...updateFields,
+        ...update,
         $currentDate: {
           updatedAt: true,
         },
@@ -79,19 +76,13 @@ export class TasksService {
         })
         .then(() => {
           task.state = TaskStateEnum.SUCCESS;
-          this.updateTask({
-            filterFields: { id: task._id.toString() },
-            updateFields: { state: TaskStateEnum.SUCCESS },
-          });
+          this.updateTask({ id: task._id.toString() }, { state: TaskStateEnum.SUCCESS });
           return task;
         })
         .catch((err) => {
           this.logger.error(`Task ${task._id.toString()} failed`, err.stack);
           task.state = TaskStateEnum.FAILED;
-          this.updateTask({
-            filterFields: { id: task._id.toString() },
-            updateFields: { state: TaskStateEnum.FAILED },
-          });
+          this.updateTask({ id: task._id.toString() }, { state: TaskStateEnum.FAILED });
           return task;
         });
     });
