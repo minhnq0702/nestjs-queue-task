@@ -27,8 +27,11 @@ export class MessagesController {
 
   @Get()
   @Pagination()
-  async ctrlListMsgs(@Query('limit') limit: number): Promise<PaginateResponse<MessageDoc>> {
-    return this.msgSvc.pagiation({}, { limit }).then(([data, count]) => {
+  async ctrlListMsgs(
+    @Query('limit') limit: number,
+    @Query('page') page: number,
+  ): Promise<PaginateResponse<MessageDoc>> {
+    return this.msgSvc.pagiation({}, { limit, page }).then(([data, count]) => {
       return {
         data,
         count: data.length,

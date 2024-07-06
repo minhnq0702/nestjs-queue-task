@@ -29,8 +29,8 @@ export class TasksController {
 
   @Get()
   @Pagination()
-  async ctrlListTasks(@Query('limit') limit: number): Promise<PaginateResponse<TaskDoc>> {
-    return this.tasksService.pagiation({}, { limit }).then(([data, count]) => {
+  async ctrlListTasks(@Query('limit') limit: number, @Query('page') page: number): Promise<PaginateResponse<TaskDoc>> {
+    return this.tasksService.pagiation({}, { limit, page }).then(([data, count]) => {
       return {
         data,
         count: data.length,
