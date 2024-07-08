@@ -18,6 +18,7 @@ export class AuthService {
    * @returns JWT Token
    */
   async authenticate(login: string, password: string): Promise<string> {
+    // TODO change Error type here. Change to MyCustomError
     if (!login || !password) throw new Error('Invalid login or password');
 
     const user = await this.accSvc.getAccount({ $or: [{ email: login }, { account: login }] });
