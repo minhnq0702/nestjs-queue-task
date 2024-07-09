@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
-import { BaseEntity, BaseOperate } from './base.entity';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { Account } from './account.entity';
+import { BaseEntity } from './base.entity';
 
 export type TaskDoc = HydratedDocument<Task>;
 
@@ -38,15 +39,9 @@ export class Task extends BaseEntity {
 
   @Prop()
   jobId?: string;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Account.name })
+  account?: Account;
 }
 
 export const TaskSchmea = SchemaFactory.createForClass(Task);
-
-export type TaskFilter = {
-  model?: string;
-  func?: string;
-  state?: TaskStateEnum;
-};
-
-// export type TaskOperation = BaseOperate;
-export type TaskOperation = BaseOperate<TaskFilter, object>;

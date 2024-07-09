@@ -1,4 +1,4 @@
-import { paginate, PaginateQuery, PaginateResult } from '@/common/paginate/paginate';
+import { paginate, PaginateQuery as PagiQuery, PaginateResult as PagiRes } from '@/common/paginate/paginate';
 import { Account, AccountDoc } from '@/entities/account.entity';
 import { AccountAlreadyExist } from '@/entities/error.entity';
 import { LoggerService } from '@/logger/logger.service';
@@ -14,7 +14,7 @@ export class AccountsService {
     private readonly logger: LoggerService,
   ) {}
 
-  async pagination(query: FilterQuery<AccountDoc>, paginateQuery: PaginateQuery): Promise<PaginateResult<AccountDoc>> {
+  async pagination(query: FilterQuery<AccountDoc>, paginateQuery: PagiQuery): Promise<PagiRes<AccountDoc>> {
     return paginate<AccountDoc, Account>(this.accModel, query, paginateQuery);
   }
 
