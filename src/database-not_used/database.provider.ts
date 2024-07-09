@@ -6,6 +6,6 @@ export const databaseProviders = [
   {
     provide: 'DATABASE_CONNECTION',
     useFactory: async (): Promise<typeof mongoose> =>
-      await mongoose.connect('mongodb://root:root@localhost:27017/queued_tasks_dev')
-  }
+      await mongoose.connect('mongodb://root:root@localhost:27017/queued_tasks_dev'),
+  },
 ];
