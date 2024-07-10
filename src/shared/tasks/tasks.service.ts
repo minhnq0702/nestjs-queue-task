@@ -32,7 +32,7 @@ export class TasksService {
     return this.taskModel.create(task);
   }
 
-  /** Get task filtered by id */
+  /** Get task filtered by query condition */
   async getTask(filter: FilterQuery<TaskDoc>): Promise<TaskDoc> {
     const res = this.taskModel.findOne(filter);
     return res.exec();
@@ -76,13 +76,13 @@ export class TasksService {
         })
         .then(() => {
           task.state = TaskStateEnum.SUCCESS;
-          this.updateTask({ id: task._id.toString() }, { state: TaskStateEnum.SUCCESS });
+          this.updateTask({ _id: task._id.toString() }, { state: TaskStateEnum.SUCCESS });
           return task;
         })
         .catch((err) => {
           this.logger.error(`Task ${task._id.toString()} failed`, err.stack);
           task.state = TaskStateEnum.FAILED;
-          this.updateTask({ id: task._id.toString() }, { state: TaskStateEnum.FAILED });
+          this.updateTask({ _id: task._id.toString() }, { state: TaskStateEnum.FAILED });
           return task;
         });
     });

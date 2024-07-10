@@ -53,7 +53,7 @@ export class TasksController {
 
   @Get(':id')
   async ctrlGetTaskById(@Param('id') id: string): Promise<TaskDoc> {
-    const task = await this.tasksService.getTask({ filterFields: { id } });
+    const task = await this.tasksService.getTask({ _id: id });
     if (!task) {
       throw new TaskNotFound(`Task with id ${id.toString()} not found`);
     }

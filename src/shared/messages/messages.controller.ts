@@ -55,7 +55,7 @@ export class MessagesController {
 
   @Get(':id')
   async ctrlGetMessagekById(@Param('id') id: string): Promise<MessageDoc> {
-    const msg = await this.msgSvc.getMsg({ id: id });
+    const msg = await this.msgSvc.getMsg({ _id: id });
     if (!msg) {
       throw new MsgNotFound(`Message with id ${id.toString()} not found`);
     }

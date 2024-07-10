@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { BaseEntity, BaseOperate } from './base.entity';
+import { BaseEntity } from './base.entity';
 
 export type MessageDoc = HydratedDocument<Message>;
 
@@ -58,5 +58,3 @@ export type MessageUpdate = {
   providerId?: string;
   addInfo?: MessageAddInfo;
 };
-
-export type MessageOperation = BaseOperate<MessageFilter, MessageUpdate>;

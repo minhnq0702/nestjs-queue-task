@@ -20,11 +20,3 @@ export type BaseFilter<T> = {
 } & T;
 
 export type BaseSort = Record<string, number>;
-
-export type BaseOperate<T, U> = {
-  filterFields: BaseFilter<T>;
-  // updateFields?: U & Record<string, any>; // ? should change to Partial<T>
-  updateFields?: U;
-  sortFields?: Record<string, number>;
-  limit?: number | null;
-};

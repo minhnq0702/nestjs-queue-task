@@ -84,7 +84,7 @@ export class MessagesService {
       .then((sid) => {
         this.updateMsgs(
           {
-            id: msg.id,
+            _id: msg.id,
           },
           { state: MessageStateEnum.QUEUED, providerId: sid },
         );
@@ -92,7 +92,7 @@ export class MessagesService {
       })
       .catch(async (err) => {
         await this.updateMsgs(
-          { id: msg.id },
+          { _id: msg.id },
           {
             state: MessageStateEnum.FAILED,
             failReason: err,

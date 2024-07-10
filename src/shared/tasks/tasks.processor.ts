@@ -3,12 +3,12 @@ import { DoneCallback, Job } from 'bull';
 
 export default function (job: Job, cb: DoneCallback) {
   const taskParams = job.data;
-  OdooExecutor(taskParams).then(
-    async (taskDbId) => {
+  OdooExecutor(taskParams)
+    .then((taskDbId) => {
       cb(null, taskDbId);
-    },
-    async (err) => {
+    })
+    .catch((err) => {
+      console.log('co zo day ko 4?');
       cb(err);
-    },
-  );
+    });
 }

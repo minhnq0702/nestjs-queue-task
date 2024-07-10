@@ -19,12 +19,7 @@ export class TaskCronService {
   @Cron(CronExpression.EVERY_10_SECONDS)
   async cronTaskExecute() {
     this.logger.debug(`[${process.pid}] CRON EXECUTE QUEUED TASK`);
-    const tasksToDo = await this.taskService.listTasks({
-      filterFields: {
-        state: TaskStateEnum.DRAFT,
-      },
-      limit: 200,
-    });
+    const tasksToDo = await this.taskService.listTasks({ state: TaskStateEnum.DRAFT }, 200);
     // console.log('READY?', await this.taskQueue.isReady());
     // if (!(await this.taskQueue.isReady())) {
     //   return;
@@ -44,7 +39,7 @@ export class TaskCronService {
           records: task.records,
         })
         .then((job) => {
-          this.taskService.updateTask({ id: task._id.toString() }, { state: TaskStateEnum.PENDING, jobId: job.id });
+          this.taskService.updateTask({ _id: task._id.toString() }, { state: TaskStateEnum.PENDING, jobId: job.id });
         });
     });
   }
