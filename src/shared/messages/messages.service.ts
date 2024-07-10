@@ -30,8 +30,8 @@ export class MessagesService {
     return res.exec();
   }
 
-  async createMsg(task: Message): Promise<MessageDoc> {
-    return this.msgModel.create(task);
+  async createMsg(msg: Message): Promise<MessageDoc> {
+    return this.msgModel.create(msg);
   }
 
   /**
