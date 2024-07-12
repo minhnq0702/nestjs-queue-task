@@ -19,17 +19,18 @@ export default class AllExceptionFilter implements ExceptionFilter {
     let code: number = 1;
     let statusCode: number = HttpStatus.INTERNAL_SERVER_ERROR;
     let error: string | object = 'INTERNAL_SERVER_ERROR';
-    let message: string | string[] | null;
+    let message: string[] | null;
     let additional: object | null = null;
     switch (true) {
       case exception instanceof MyException:
         code = exception.code;
         statusCode = exception.httpStatus;
         error = exception.error;
-        message = exception.message;
+        message = [exception.message];
         additional = exception.additional;
         break;
       case exception instanceof HttpException:
+        console.log('HttpException', exception);
         code = statusCode = exception.getStatus();
         const httpError = exception.getResponse();
         if (typeof httpError === 'object' && httpError.hasOwnProperty('message')) {
@@ -38,7 +39,7 @@ export default class AllExceptionFilter implements ExceptionFilter {
         }
         break;
       case exception instanceof Error:
-        message = exception.message;
+        message = [exception.message];
         break;
       default:
         break;
