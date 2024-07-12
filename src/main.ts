@@ -29,14 +29,16 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
+
+  const _adapter = app.get(HttpAdapterHost);
   const _logger: LoggerService = app.get(Logger);
+  const _reflector: Reflector = app.get(Reflector);
 
   // * define globle filter for exception
-  const adapter = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new AllExceptionFilter(adapter, app.get(LoggerService)));
+  app.useGlobalFilters(new AllExceptionFilter(_logger, _adapter));
 
   // * define global interceptor
-  app.useGlobalInterceptors(new LoggingInterceptor(_logger, app.get(Reflector)));
+  app.useGlobalInterceptors(new LoggingInterceptor(_logger, _reflector));
 
   // * define global prefix
   app.setGlobalPrefix('/api');
