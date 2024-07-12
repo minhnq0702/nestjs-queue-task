@@ -4,7 +4,9 @@ import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
 
+import { AuthService } from '@/auth/auth.service';
 import { SetMetadata } from '@nestjs/common';
+
 export const IS_PUBLIC = 'IS_PUBLIC';
 export const Public = () => SetMetadata(IS_PUBLIC, true);
 
@@ -18,6 +20,7 @@ export const JwtKey = () => SetMetadata(IS_JWT_KEY, true);
 export class HttpAuthGuard implements CanActivate {
   constructor(
     private readonly logger: LoggerService,
+    private readonly authSvc: AuthService,
     private reflector: Reflector,
   ) {}
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -37,12 +40,12 @@ export class HttpAuthGuard implements CanActivate {
     }
     this.logger.debug(`ApiKeyAuthGuard: canActivate() called. ${isPublic} ${isApiKey} ${isJwtKey}`);
 
-    if (isApiKey && this.validateApiKey(req.header('x-api-key'))) {
-      return true;
+    if (isApiKey) {
+      return this.validateApiKey(req.header('x-api-key'));
     }
 
-    if (isJwtKey && this.validateJwtToken(this.getTokenFromRequest(req))) {
-      return true;
+    if (isJwtKey) {
+      return this.validateJwtToken(this.getTokenFromRequest(req));
     }
 
     return true;
@@ -54,8 +57,7 @@ export class HttpAuthGuard implements CanActivate {
   }
 
   validateJwtToken(token: string): boolean {
-    console.log('this is jwt token', token);
-    return true;
+    return this.authSvc.verify_JWT(token);
   }
 
   getTokenFromRequest(req: Request): string {

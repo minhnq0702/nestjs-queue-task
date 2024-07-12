@@ -44,4 +44,13 @@ export class AuthService {
   private async sign_JWT(signPayload: SignPayloadDto): Promise<string> {
     return this.jwtSvc.signAsync(signPayload);
   }
+
+  verify_JWT(token: string): boolean {
+    try {
+      this.jwtSvc.verify(token);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }
