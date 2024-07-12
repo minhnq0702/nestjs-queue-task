@@ -26,7 +26,8 @@ export class AuthService {
       throw new WrongLoginInfo('Email / Account not found');
     }
 
-    if (user.password !== password) {
+    const hashedPassword = await this.accSvc.hashPassword(password);
+    if (user.password !== hashedPassword) {
       throw new WrongLoginInfo('Wrong passwod');
     }
 
