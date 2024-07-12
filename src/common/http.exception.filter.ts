@@ -6,8 +6,8 @@ import { HttpAdapterHost } from '@nestjs/core';
 @Catch()
 export default class AllExceptionFilter implements ExceptionFilter {
   constructor(
-    private readonly httpAdapterHost: HttpAdapterHost,
     private readonly logger: LoggerService,
+    private readonly httpAdapterHost: HttpAdapterHost,
   ) {}
 
   catch(exception: Error, host: ArgumentsHost): void {
@@ -26,7 +26,7 @@ export default class AllExceptionFilter implements ExceptionFilter {
         code = exception.code;
         statusCode = exception.httpStatus;
         error = exception.error;
-        message = [exception.message];
+        message = (exception.message && [exception.message]) || [];
         additional = exception.additional;
         break;
       case exception instanceof HttpException:
