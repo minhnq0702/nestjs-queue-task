@@ -7,7 +7,7 @@ import { AccountsService } from './accounts.service';
 
 @Module({
   imports: [
-    LoggerModule.register('ACCOUNT'),
+    LoggerModule.register('ACCOUNTS'),
     MongooseModule.forFeature([{ name: Account.name, schema: AccountSchema }]),
   ],
   providers: [AccountsService],

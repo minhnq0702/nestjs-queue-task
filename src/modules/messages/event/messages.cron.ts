@@ -1,7 +1,7 @@
 import { MessageDoc, MessageStateEnum } from '@/entities/message.entity';
 import { LoggerService } from '@/logger/logger.service';
-import { TWILIO_QUEUE_MSG_CHANNEL } from '@/shared/messages/constants';
-import { MessagesService } from '@/shared/messages/messages.service';
+import { TWILIO_QUEUE_MSG_CHANNEL } from '@/modules/messages/constants';
+import { MessagesService } from '@/modules/messages/messages.service';
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';

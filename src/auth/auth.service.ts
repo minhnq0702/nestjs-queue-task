@@ -1,6 +1,6 @@
 import { SignPayloadDto } from '@/dto';
 import { WrongLoginInfo } from '@/entities/error.entity';
-import { AccountsService } from '@/shared/accounts/accounts.service';
+import { AccountsService } from '@/modules/accounts/accounts.service';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 

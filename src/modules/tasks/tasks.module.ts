@@ -15,7 +15,7 @@ import { TasksService } from './tasks.service';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Task.name, schema: TaskSchmea }]),
-    LoggerModule.register('Shared/Tasks'),
+    LoggerModule.register('TASKS'),
     // BullModule.registerQueueAsync({
     //   useFactory: async (config: ConfigService) => ({
     //     name: config.get<string>(ODOO_CONFIG.ODOO_QUEUE_TASK_CHANNEL),

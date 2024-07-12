@@ -1,7 +1,7 @@
 import { OdooDoingTaskParams } from '@/dto/event/odoo.doing.task.dto';
 import { TaskStateEnum } from '@/entities/task.entity';
 import { LoggerService } from '@/logger/logger.service';
-import { ODOO_QUEUE_TASK_CHANNEL } from '@/shared/tasks/constants';
+import { ODOO_QUEUE_TASK_CHANNEL } from '@/modules/tasks/constants';
 import {
   InjectQueue,
   OnQueueActive,

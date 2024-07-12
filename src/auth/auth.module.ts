@@ -1,7 +1,7 @@
 import { HttpAuthGuard } from '@/common/http.auth.guard';
 import { JWT_SECRET } from '@/constants';
 import { LoggerModule } from '@/logger/logger.module';
-import { AccountsModule } from '@/shared/accounts/accounts.module';
+import { AccountsModule } from '@/modules/accounts/accounts.module';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
@@ -22,7 +22,7 @@ import { AuthService } from './auth.service';
       },
       inject: [ConfigService],
     }),
-    AccountsModule,
+    AccountsModule, // ? Should inject AccountModule here? To de-structure and split microservices, should inject db connection instead
   ],
   providers: [
     AuthService,

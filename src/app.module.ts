@@ -1,7 +1,7 @@
 import { AuthModule } from '@/auth/auth.module';
 import { KafkaModule } from '@/kafka/kafka.module';
-import { AccountsModule } from '@/shared/accounts/accounts.module';
-import { ModuleLoader } from '@/shared/module.loader';
+import { AccountsModule } from '@/modules/accounts/accounts.module';
+import { ModuleLoader } from '@/modules/module.loader';
 import { BullModule } from '@nestjs/bull';
 import { Logger, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
