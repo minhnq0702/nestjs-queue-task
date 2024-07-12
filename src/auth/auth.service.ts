@@ -1,5 +1,5 @@
 import { SignPayloadDto } from '@/dto';
-import { AccountNotFound } from '@/entities/error.entity';
+import { WrongLoginInfo } from '@/entities/error.entity';
 import { AccountsService } from '@/shared/accounts/accounts.service';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -22,11 +22,17 @@ export class AuthService {
     if (!login || !password) throw new Error('Invalid login or password');
 
     const user = await this.accSvc.getAccount({ $or: [{ email: login }, { account: login }] });
-    console.log(user);
     if (!user) {
-      throw new AccountNotFound();
+      throw new WrongLoginInfo('Email / Account not found');
     }
-    return '';
+
+    if (user.password !== password) {
+      throw new WrongLoginInfo('Wrong passwod');
+    }
+
+    const token = await this.sign_JWT({ email: user.email, account: user.account, role: user.role });
+
+    return token;
   }
 
   /**
