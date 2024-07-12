@@ -8,7 +8,8 @@ export type AccountDoc = HydratedDocument<Account>;
 export class Account extends BaseEntity {
   @Prop({
     required: false,
-    index: { unique: true, partialFilterExpression: { account: { $exists: true } } },
+    default: null,
+    index: { unique: true, partialFilterExpression: { account: { $exists: true, $type: 'string' } } },
   })
   account: string;
 
