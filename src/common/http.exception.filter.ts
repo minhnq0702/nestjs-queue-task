@@ -30,12 +30,12 @@ export default class AllExceptionFilter implements ExceptionFilter {
         additional = exception.additional;
         break;
       case exception instanceof HttpException:
-        console.log('HttpException', exception);
         code = statusCode = exception.getStatus();
+        message = [exception.message];
         const httpError = exception.getResponse();
-        if (typeof httpError === 'object' && httpError.hasOwnProperty('message')) {
+        if (typeof httpError === 'object') {
           error = httpError['error'];
-          message = httpError['message'];
+          message = [httpError['message'] || message].flat();
         }
         break;
       case exception instanceof Error:
