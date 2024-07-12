@@ -40,7 +40,13 @@ async function bootstrap() {
 
   // * define global prefix
   app.setGlobalPrefix('/api');
-  app.enableCors();
+  app.enableCors({
+    origin: [
+      '*', // TODO remove *
+      'http://localhost:8080',
+    ],
+    credentials: true,
+  });
 
   const AppConfig = app.get(ConfigService);
   startMicroservice(app, _logger);
