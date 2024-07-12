@@ -7,7 +7,9 @@ export class CreateAccountDto {
       allow_utf8_local_part: true,
       // require_tld: true,
     },
-    { always: false },
+    {
+      message: 'Invalid email', // TODO change to CODE
+    },
   )
   email: string;
 
@@ -19,10 +21,7 @@ export class CreateAccountDto {
       minNumbers: 1,
     },
     {
-      message: (args) => {
-        console.log(args);
-        return 'Password is too weak';
-      },
+      message: 'Password is too weak', // TODO change to CODE
     },
   )
   password: string;

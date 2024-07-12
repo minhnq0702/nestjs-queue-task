@@ -14,9 +14,3 @@ export class BaseEntity {
   @Prop({ default: Date.now })
   updatedAt?: Date;
 }
-
-export type BaseFilter<T> = {
-  id?: string | Record<'$in', any>;
-} & T;
-
-export type BaseSort = Record<string, number>;

@@ -4,6 +4,7 @@ import { AccountAlreadyExist } from '@/entities/error.entity';
 import { LoggerService } from '@/logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import * as crypto from 'crypto';
 import { MongoServerError } from 'mongodb';
 import { FilterQuery, Model, UpdateQuery } from 'mongoose';
 
@@ -28,6 +29,8 @@ export class AccountsService {
   }
 
   async createAccount(account: Account): Promise<AccountDoc> {
+    const hashPassword = await this.hashPassword(account.password);
+    account.password = hashPassword;
     return this.accModel.create(account).catch((err: MongoServerError) => {
       if (!(err instanceof MongoServerError)) throw err;
       if (err.code === 11000) {
@@ -50,5 +53,14 @@ export class AccountsService {
 
   async deleteAccountById(accountId: string): Promise<void> {
     await this.accModel.deleteOne({ _id: accountId });
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      crypto.pbkdf2(password, 'salt', 69, 64, 'sha512', (err, derivedKey) => {
+        if (err) reject(err);
+        resolve(derivedKey.toString('hex'));
+      });
+    });
   }
 }

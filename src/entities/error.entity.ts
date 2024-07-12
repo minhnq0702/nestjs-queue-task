@@ -16,6 +16,16 @@ export class MyException extends Error {
   }
 }
 
+export class UnAuthorized extends MyException {
+  httpStatus = STATUS.UNAUTHORIZED;
+  code = this.httpStatus;
+  error = 'UNAUTHORIZED';
+}
+
+export class WrongLoginInfo extends UnAuthorized {
+  error = 'WRONG_LOGIN_INFO';
+}
+
 export class NotFound extends MyException {
   httpStatus = STATUS.NOT_FOUND;
   code = this.httpStatus;
