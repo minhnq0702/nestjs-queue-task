@@ -23,7 +23,6 @@ export class HttpAuthGuard implements CanActivate {
     private readonly authSvc: AuthService,
     private reflector: Reflector,
   ) {}
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const req = context.switchToHttp().getRequest<Request>();
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC, [context.getHandler(), context.getClass()]);
@@ -56,7 +55,7 @@ export class HttpAuthGuard implements CanActivate {
     return true;
   }
 
-  validateJwtToken(token: string): boolean {
+  validateJwtToken(token: string): Promise<boolean> {
     return this.authSvc.verify_JWT(token);
   }
 

@@ -1,4 +1,3 @@
-import { HttpAuthGuard } from '@/common/http.auth.guard';
 import { JWT_SECRET } from '@/constants';
 import { LoggerModule } from '@/logger/logger.module';
 import { AccountsModule } from '@/modules/accounts/accounts.module';
@@ -7,6 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
+import { HttpAuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 
 @Module({

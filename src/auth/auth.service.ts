@@ -45,12 +45,10 @@ export class AuthService {
     return this.jwtSvc.signAsync(signPayload);
   }
 
-  verify_JWT(token: string): boolean {
-    try {
-      this.jwtSvc.verify(token);
-      return true;
-    } catch (error) {
-      return false;
-    }
+  async verify_JWT(token: string): Promise<boolean> {
+    return this.jwtSvc
+      .verifyAsync(token)
+      .then(() => true)
+      .catch(() => false);
   }
 }
