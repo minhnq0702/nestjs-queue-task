@@ -1,4 +1,5 @@
 import { SignPayloadDto } from '@/dto';
+import { AccountDoc } from '@/entities/account.entity';
 import { WrongLoginInfo } from '@/entities/error.entity';
 import { AccountsService } from '@/modules/accounts/accounts.service';
 import { Injectable } from '@nestjs/common';
@@ -39,6 +40,10 @@ export class AuthService {
     });
 
     return token;
+  }
+
+  async getProfile(accountInfo: SignPayloadDto): Promise<AccountDoc> {
+    return this.accSvc.getAccount({ _id: accountInfo.id });
   }
 
   /**

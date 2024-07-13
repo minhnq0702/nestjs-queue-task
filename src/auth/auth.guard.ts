@@ -47,7 +47,6 @@ export class HttpAuthGuard implements CanActivate {
     if (isJwtKey) {
       return this.validateJwtToken(this.getTokenFromRequest(req)).then(([payload, isValid]) => {
         if (isValid) {
-          console.log('#TODO get user info', payload);
           req.accInfo = payload;
         }
         return isValid;
