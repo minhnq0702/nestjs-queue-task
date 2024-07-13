@@ -5,6 +5,7 @@ import { Request } from 'express';
 import { Observable } from 'rxjs';
 
 import { AuthService } from '@/auth/auth.service';
+import { SignPayloadDto } from '@/dto';
 import { SetMetadata } from '@nestjs/common';
 
 export const IS_PUBLIC = 'IS_PUBLIC';
@@ -40,22 +41,32 @@ export class HttpAuthGuard implements CanActivate {
     this.logger.debug(`ApiKeyAuthGuard: canActivate() called. ${isPublic} ${isApiKey} ${isJwtKey}`);
 
     if (isApiKey) {
-      return this.validateApiKey(req.header('x-api-key'));
+      return this.validateApiKey(this.getApiKeyFromRequest(req));
     }
 
     if (isJwtKey) {
-      return this.validateJwtToken(this.getTokenFromRequest(req));
+      return this.validateJwtToken(this.getTokenFromRequest(req)).then(([payload, isValid]) => {
+        if (isValid) {
+          console.log('#TODO get user info', payload);
+          req.accInfo = payload;
+        }
+        return isValid;
+      });
     }
 
     return true;
   }
 
-  validateApiKey(apiKey: string): boolean {
+  async validateApiKey(apiKey: string): Promise<boolean> {
     console.log('this is api key', apiKey);
     return true;
   }
 
-  validateJwtToken(token: string): Promise<boolean> {
+  getApiKeyFromRequest(req: Request): string {
+    return req.header('x-api-key') ?? '';
+  }
+
+  async validateJwtToken(token: string): Promise<[SignPayloadDto, boolean]> {
     return this.authSvc.verify_JWT(token);
   }
 
