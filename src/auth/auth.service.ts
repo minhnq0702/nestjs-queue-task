@@ -1,4 +1,5 @@
 import { SignPayloadDto } from '@/dto';
+import { AccountDoc } from '@/entities/account.entity';
 import { WrongLoginInfo } from '@/entities/error.entity';
 import { AccountsService } from '@/modules/accounts/accounts.service';
 import { Injectable } from '@nestjs/common';
@@ -31,9 +32,18 @@ export class AuthService {
       throw new WrongLoginInfo('Wrong passwod');
     }
 
-    const token = await this.sign_JWT({ email: user.email, account: user.account, role: user.role });
+    const token = await this.sign_JWT({
+      id: user._id.toString(),
+      email: user.email,
+      account: user.account,
+      role: user.role,
+    });
 
     return token;
+  }
+
+  async getProfile(accountInfo: SignPayloadDto): Promise<AccountDoc> {
+    return this.accSvc.getAccount({ _id: accountInfo.id });
   }
 
   /**
@@ -43,5 +53,14 @@ export class AuthService {
    */
   private async sign_JWT(signPayload: SignPayloadDto): Promise<string> {
     return this.jwtSvc.signAsync(signPayload);
+  }
+
+  async verify_JWT(token: string): Promise<[SignPayloadDto | null, boolean]> {
+    return this.jwtSvc
+      .verifyAsync<SignPayloadDto>(token)
+      .then((res) => {
+        return [res, true] satisfies [SignPayloadDto, boolean];
+      })
+      .catch(() => [null, false]);
   }
 }

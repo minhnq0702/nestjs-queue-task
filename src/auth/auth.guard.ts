@@ -4,7 +4,10 @@ import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
 
+import { AuthService } from '@/auth/auth.service';
+import { SignPayloadDto } from '@/dto';
 import { SetMetadata } from '@nestjs/common';
+
 export const IS_PUBLIC = 'IS_PUBLIC';
 export const Public = () => SetMetadata(IS_PUBLIC, true);
 
@@ -18,9 +21,9 @@ export const JwtKey = () => SetMetadata(IS_JWT_KEY, true);
 export class HttpAuthGuard implements CanActivate {
   constructor(
     private readonly logger: LoggerService,
+    private readonly authSvc: AuthService,
     private reflector: Reflector,
   ) {}
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const req = context.switchToHttp().getRequest<Request>();
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC, [context.getHandler(), context.getClass()]);
@@ -37,25 +40,33 @@ export class HttpAuthGuard implements CanActivate {
     }
     this.logger.debug(`ApiKeyAuthGuard: canActivate() called. ${isPublic} ${isApiKey} ${isJwtKey}`);
 
-    if (isApiKey && this.validateApiKey(req.header('x-api-key'))) {
-      return true;
+    if (isApiKey) {
+      return this.validateApiKey(this.getApiKeyFromRequest(req));
     }
 
-    if (isJwtKey && this.validateJwtToken(this.getTokenFromRequest(req))) {
-      return true;
+    if (isJwtKey) {
+      return this.validateJwtToken(this.getTokenFromRequest(req)).then(([payload, isValid]) => {
+        if (isValid) {
+          req.accInfo = payload;
+        }
+        return isValid;
+      });
     }
 
     return true;
   }
 
-  validateApiKey(apiKey: string): boolean {
+  async validateApiKey(apiKey: string): Promise<boolean> {
     console.log('this is api key', apiKey);
     return true;
   }
 
-  validateJwtToken(token: string): boolean {
-    console.log('this is jwt token', token);
-    return true;
+  getApiKeyFromRequest(req: Request): string {
+    return req.header('x-api-key') ?? '';
+  }
+
+  async validateJwtToken(token: string): Promise<[SignPayloadDto, boolean]> {
+    return this.authSvc.verify_JWT(token);
   }
 
   getTokenFromRequest(req: Request): string {

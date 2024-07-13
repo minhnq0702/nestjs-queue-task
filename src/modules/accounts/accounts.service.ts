@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as crypto from 'crypto';
 import { MongoServerError } from 'mongodb';
-import { FilterQuery, Model, UpdateQuery } from 'mongoose';
+import { FilterQuery, Model, ProjectionType, UpdateQuery } from 'mongoose';
 
 @Injectable()
 export class AccountsService {
@@ -24,8 +24,8 @@ export class AccountsService {
     return res.exec();
   }
 
-  async getAccount(filter: FilterQuery<AccountDoc>): Promise<AccountDoc> {
-    return this.accModel.findOne(filter).exec();
+  async getAccount(filter: FilterQuery<AccountDoc>, projection?: ProjectionType<Account>): Promise<AccountDoc> {
+    return this.accModel.findOne(filter, projection).exec();
   }
 
   async createAccount(account: Account): Promise<AccountDoc> {

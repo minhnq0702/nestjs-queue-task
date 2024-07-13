@@ -1,6 +1,5 @@
 import { PaginateResponse as PagiResp, Pagination } from '@/common/paginate/paginate';
-import { CreateAccountDto } from '@/dto';
-import { AccountDoc } from '@/entities/account.entity';
+import { AccountDto, CreateAccountDto } from '@/dto';
 import { LoggerService } from '@/logger/logger.service';
 import {
   Body,
@@ -15,10 +14,11 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { AccountsService } from './accounts.service';
 
 @Controller('accounts')
-@UsePipes(ValidationPipe)
+@UsePipes(new ValidationPipe({ whitelist: true }))
 export class AccountsController {
   constructor(
     private readonly logger: LoggerService,
@@ -27,20 +27,27 @@ export class AccountsController {
 
   @Get()
   @Pagination()
-  async ctrlListAccount(@Query('limit') limit: number, @Query('page') page: number): Promise<PagiResp<AccountDoc>> {
+  async ctrlListAccount(@Query('limit') limit: number, @Query('page') page: number): Promise<PagiResp<AccountDto>> {
     // TODO: update sort query
     return this.accSvc.pagination({}, { limit, page }).then(([data, count]) => {
+      const _data = plainToInstance(
+        AccountDto,
+        data.map((_d) => _d.toObject()),
+        { excludeExtraneousValues: true },
+      );
       return {
-        data,
-        count: data.length,
+        data: _data,
+        count: _data.length,
         total: count,
       };
     });
   }
 
   @Post()
-  async ctrlCreateAccount(@Body() payload: CreateAccountDto): Promise<AccountDoc> {
-    return this.accSvc.createAccount(payload);
+  async ctrlCreateAccount(@Body() payload: CreateAccountDto): Promise<AccountDto> {
+    return this.accSvc.createAccount(payload).then((res) => {
+      return plainToInstance(AccountDto, res.toObject());
+    });
   }
 
   // ! Should protect this route only for admin
