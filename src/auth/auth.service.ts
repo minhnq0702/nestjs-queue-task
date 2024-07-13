@@ -31,7 +31,12 @@ export class AuthService {
       throw new WrongLoginInfo('Wrong passwod');
     }
 
-    const token = await this.sign_JWT({ email: user.email, account: user.account, role: user.role });
+    const token = await this.sign_JWT({
+      id: user._id.toString(),
+      email: user.email,
+      account: user.account,
+      role: user.role,
+    });
 
     return token;
   }
@@ -45,10 +50,12 @@ export class AuthService {
     return this.jwtSvc.signAsync(signPayload);
   }
 
-  async verify_JWT(token: string): Promise<boolean> {
+  async verify_JWT(token: string): Promise<[SignPayloadDto | null, boolean]> {
     return this.jwtSvc
-      .verifyAsync(token)
-      .then(() => true)
-      .catch(() => false);
+      .verifyAsync<SignPayloadDto>(token)
+      .then((res) => {
+        return [res, true] satisfies [SignPayloadDto, boolean];
+      })
+      .catch(() => [null, false]);
   }
 }
