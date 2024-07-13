@@ -1,37 +1,17 @@
 import { OmitType } from '@nestjs/mapped-types';
 import { Expose } from 'class-transformer';
-import { IsDate, IsEmail, IsNotEmpty, IsOptional, IsString, IsStrongPassword } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, IsStrongPassword } from 'class-validator';
+import utils from './utils';
 
 export class AccountDto {
-  @IsString()
-  @IsOptional()
   @Expose()
   _id: string;
 
-  @IsEmail(
-    {
-      allow_ip_domain: false,
-      allow_utf8_local_part: true,
-      // require_tld: true,
-    },
-    {
-      message: 'Invalid email', // TODO change to CODE
-    },
-  )
+  @IsEmail(...utils.EmailValidation)
   @Expose()
   email: string;
 
-  @IsStrongPassword(
-    {
-      minLength: 8,
-      minLowercase: 1,
-      minUppercase: 1,
-      minNumbers: 1,
-    },
-    {
-      message: 'Password is too weak', // TODO change to CODE
-    },
-  )
+  @IsStrongPassword(...utils.PasswordValidation)
   @Expose()
   password: string;
 
@@ -45,11 +25,9 @@ export class AccountDto {
   @Expose()
   role: string;
 
-  @IsDate()
   @Expose()
   createdAt: Date;
 
-  @IsDate()
   @Expose()
   updatedAt: Date;
 }
