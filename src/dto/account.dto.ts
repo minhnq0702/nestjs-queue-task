@@ -1,6 +1,13 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString, IsStrongPassword } from 'class-validator';
+import { OmitType } from '@nestjs/mapped-types';
+import { Expose } from 'class-transformer';
+import { IsDate, IsEmail, IsNotEmpty, IsOptional, IsString, IsStrongPassword } from 'class-validator';
 
-export class CreateAccountDto {
+export class AccountDto {
+  @IsString()
+  @IsOptional()
+  @Expose()
+  _id: string;
+
   @IsEmail(
     {
       allow_ip_domain: false,
@@ -11,6 +18,7 @@ export class CreateAccountDto {
       message: 'Invalid email', // TODO change to CODE
     },
   )
+  @Expose()
   email: string;
 
   @IsStrongPassword(
@@ -24,16 +32,31 @@ export class CreateAccountDto {
       message: 'Password is too weak', // TODO change to CODE
     },
   )
+  @Expose()
   password: string;
 
   @IsString()
   @IsOptional()
+  @Expose()
   account: string;
 
   @IsString()
   @IsOptional()
+  @Expose()
   role: string;
+
+  @IsDate()
+  @Expose()
+  createdAt: Date;
+
+  @IsDate()
+  @Expose()
+  updatedAt: Date;
 }
+
+export class ProfileDto extends OmitType(AccountDto, ['password']) {}
+
+export class CreateAccountDto extends OmitType(AccountDto, ['_id', 'createdAt', 'updatedAt']) {}
 
 export class LoginDto {
   @IsString()
