@@ -46,9 +46,8 @@ export class LoginDto {
 }
 
 export class SignPayloadDto {
+  id: string;
   email: string;
-
   account: string | null;
-
   role: string | null;
 }
