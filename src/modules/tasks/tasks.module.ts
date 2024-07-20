@@ -1,4 +1,4 @@
-import { Task, TaskSchmea } from '@/entities/task.entity';
+import { Task, TaskSchema } from '@/entities/task.entity';
 import { ExternalModule } from '@/external/external.module';
 import { LoggerModule } from '@/logger/logger.module';
 import { BullModule } from '@nestjs/bull';
@@ -14,7 +14,7 @@ import { TasksService } from './tasks.service';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Task.name, schema: TaskSchmea }]),
+    MongooseModule.forFeature([{ name: Task.name, schema: TaskSchema }]),
     LoggerModule.register('TASKS'),
     // BullModule.registerQueueAsync({
     //   useFactory: async (config: ConfigService) => ({

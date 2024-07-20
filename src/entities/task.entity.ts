@@ -44,4 +44,4 @@ export class Task extends BaseEntity {
   account?: Account;
 }
 
-export const TaskSchmea = SchemaFactory.createForClass(Task);
+export const TaskSchema = SchemaFactory.createForClass(Task);
