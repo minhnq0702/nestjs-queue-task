@@ -80,5 +80,22 @@ describe('TasksController', () => {
         expect(task).toEqual(expect.objectContaining(taskCreateDto));
       });
     });
+
+    describe('when ctrlCreateTask is called with invalid data', () => {
+      it('then it should throw an error', async () => {
+        const taskCreateDto = {
+          // model: 'res.partner',
+          // func: 'create',
+          // args: '[]',
+          // kwargs: '{}',
+          // records: 'record',
+          // executeUrl: 'http://localhost:8069',
+        };
+        jest.spyOn(tasksService, 'createTask').mockRejectedValue(new Error('Invalid data'));
+        // const res = await taskController.ctrlCreateTask(taskCreateDto as OdooCreateTaskDto);
+        // console.log('cai gi day', res);
+        await expect(taskController.ctrlCreateTask(taskCreateDto as OdooCreateTaskDto)).rejects.toThrow('Invalid data');
+      });
+    });
   });
 });
