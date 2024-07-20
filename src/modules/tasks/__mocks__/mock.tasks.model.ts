@@ -17,6 +17,6 @@ export const MockTasksModel = jest.fn().mockImplementation(() => ({
   countDocuments: jest.fn().mockReturnValue(MockCount()),
   // create: jest.fn().mockResolvedValue(tasksStub()[0]),
   create: async (val: TaskDoc) => {
-    return jest.fn().mockResolvedValue(val)();
+    return val;
   },
 }));
