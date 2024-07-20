@@ -15,8 +15,8 @@ export class TasksService {
     @InjectModel(Task.name) private taskModel: Model<Task>,
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
-    // @InjectQueue(process.env.ODOO_QUEUE_TASK_CHANNEL) private taskQueue: Queue,
     private readonly odooService: OdooService, // ? should change to externalService and use Odoo as a functional service
+    // @InjectQueue(process.env.ODOO_QUEUE_TASK_CHANNEL) private taskQueue: Queue,
   ) {}
 
   async pagiation(filter: FilterQuery<TaskDoc>, paginateQuery: PaginateQuery): Promise<[TaskDoc[], number]> {
