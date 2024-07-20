@@ -13,7 +13,6 @@ export class KafkaFilter implements ExceptionFilter {
     const partition = ctx.getPartition();
     const msg = ctx.getMessage();
     const offset = msg.offset;
-    // console.log('exception', exception);
     this.logger.error(
       `Validation error on topic ${topic}, partition ${partition}, offset ${offset}: ${exception.message}`,
       exception.stack,

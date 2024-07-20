@@ -11,7 +11,7 @@ export default class AllExceptionFilter implements ExceptionFilter {
   ) {}
 
   catch(exception: Error, host: ArgumentsHost): void {
-    this.logger.error(`[AllExceptionFilter] exception ${JSON.stringify(exception)}`, exception.stack);
+    this.logger.error(`${JSON.stringify(exception)}`, exception.stack, 'ExceptionFilter');
 
     const { httpAdapter } = this.httpAdapterHost;
     const ctx = host.switchToHttp();

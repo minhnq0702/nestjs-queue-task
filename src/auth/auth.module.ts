@@ -11,7 +11,7 @@ import { AuthService } from './auth.service';
 
 @Module({
   imports: [
-    LoggerModule.register('Auth'),
+    LoggerModule.register('AUTH'),
     JwtModule.registerAsync({
       useFactory: (configSvc: ConfigService) => {
         return {

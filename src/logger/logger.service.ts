@@ -26,16 +26,15 @@ export class LoggerService extends Logger {
         // winston.format.simple()
       ),
       transports: [
-        new winston.transports.Console({
-          level: 'silly',
-          format: winston.format.combine(
-            winston.format.colorize({
-              all: true,
-              colors: { info: 'blue', error: 'red', debug: 'yellow' },
-            }),
-          ),
-        }),
-
+        // new winston.transports.Console({
+        //   level: 'silly',
+        //   format: winston.format.combine(
+        //     winston.format.colorize({
+        //       all: true,
+        //       colors: { info: 'blue', error: 'red', debug: 'yellow' },
+        //     }),
+        //   ),
+        // }),
         // new winston.transports.DailyRotateFile({
         //   dirname: `logs/access`,
         //   filename: '%DATE%.log',
@@ -50,7 +49,6 @@ export class LoggerService extends Logger {
         //   level: 'error',
         //   zippedArchive: true,
         // }),
-
         // new winston.transports.DailyRotateFile({
         //   dirname: `logs/${context}/info`,
         //   filename: '%DATE%.log',
@@ -74,7 +72,51 @@ export class LoggerService extends Logger {
         // }),
       ],
     });
-    this.log(`Init logger instance`, context);
+    if (process.env.NODE_ENV !== 'production') {
+      this.logger.add(
+        new winston.transports.Console({
+          format: winston.format.combine(
+            winston.format.colorize({
+              all: true,
+              colors: { info: 'blue', error: 'red', debug: 'yellow' },
+            }),
+          ),
+        }),
+      );
+    } else {
+      this.logger.add(
+        new winston.transports.DailyRotateFile({
+          dirname: `logs`,
+          filename: 'info-%DATE%.log',
+          datePattern: 'YYYY-MM-DD',
+          level: 'info',
+          zippedArchive: true,
+        }),
+      );
+      this.logger.add(
+        new winston.transports.DailyRotateFile({
+          dirname: `logs`,
+          filename: 'info-%DATE%.log',
+          datePattern: 'YYYY-MM-DD',
+          level: 'debug',
+          zippedArchive: true,
+        }),
+      );
+      this.logger.add(
+        new winston.transports.DailyRotateFile({
+          dirname: `logs`,
+          filename: 'err-%DATE%.log',
+          datePattern: 'YYYY-MM-DD',
+          level: 'error',
+          zippedArchive: true,
+        }),
+      );
+    }
+
+    // if (process.env.NODE_ENV === 'test') {
+    //   return;
+    // }
+    this.debug(`${process.env.NODE_ENV} - Init logger instance`, context);
   }
 
   log(message: string | object, context?: string) {

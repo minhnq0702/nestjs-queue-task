@@ -9,7 +9,7 @@ import { KafkaService } from './kafka.service';
 import { kafkaClientOptions } from './utils';
 
 @Module({
-  imports: [LoggerModule.register('Kafka')],
+  imports: [LoggerModule.register('KAFKA')],
   providers: [
     KafkaService,
     ConfigService,
