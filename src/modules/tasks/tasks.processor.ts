@@ -8,7 +8,6 @@ export default function (job: Job, cb: DoneCallback) {
       cb(null, taskDbId);
     })
     .catch((err) => {
-      console.log('co zo day ko 4?');
       cb(err);
     });
 }

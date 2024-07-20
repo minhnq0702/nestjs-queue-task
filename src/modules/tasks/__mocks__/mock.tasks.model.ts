@@ -12,7 +12,6 @@ export const MockTasksModel = jest.fn().mockImplementation(() => ({
   }),
   findOne: ({ _id }: { _id: string }) => {
     const foundTask = tasksStub().find((task) => task._id.toString() === _id) || null;
-    console.log('findOne', _id, foundTask);
     return {
       exec: jest.fn().mockReturnValue(foundTask),
       // exec: () => {
