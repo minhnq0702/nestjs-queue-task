@@ -11,7 +11,7 @@ import { TasksService } from '../tasks.service';
 
 describe('TasksService', () => {
   let service: TasksService;
-  const mockTaskModel: jest.Mock = MockTasksModel();
+  const mockTaskModel = MockTasksModel();
 
   beforeAll(async () => {});
 
@@ -54,13 +54,23 @@ describe('TasksService', () => {
     expect(res.length).toEqual(tasksStub().length);
   });
 
-  it('get task success', async () => {
+  it('get 1 task success', async () => {
     const res = await service.getTask({});
     expect(res).toBeInstanceOf(Object);
+  });
+
+  it('get 1 task empty', async () => {
+    jest.spyOn(mockTaskModel, 'findOne').mockReturnValue({
+      exec: jest.fn().mockResolvedValue(null),
+    });
+
+    const res = await service.getTask({});
+    expect(res).toBeNull();
   });
 
   it('create task success', async () => {
     const res = await service.createTask(tasksStub()[0]);
     expect(res).toBeInstanceOf(Object);
+    expect(res.createdAt).toBeDefined();
   });
 });

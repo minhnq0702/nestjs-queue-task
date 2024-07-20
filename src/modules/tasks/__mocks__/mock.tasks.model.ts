@@ -1,3 +1,4 @@
+import { TaskDoc } from '@/entities/task.entity';
 import { tasksStub } from './task.stub';
 
 export const MockCount = jest.fn().mockImplementation(() => ({
@@ -14,5 +15,8 @@ export const MockTasksModel = jest.fn().mockImplementation(() => ({
   }),
   sort: jest.fn().mockReturnThis(),
   countDocuments: jest.fn().mockReturnValue(MockCount()),
-  create: jest.fn().mockResolvedValue(tasksStub()[0]),
+  // create: jest.fn().mockResolvedValue(tasksStub()[0]),
+  create: async (val: TaskDoc) => {
+    return jest.fn().mockResolvedValue(val)();
+  },
 }));
