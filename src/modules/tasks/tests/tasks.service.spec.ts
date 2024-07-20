@@ -1,4 +1,4 @@
-import { Task, TaskDoc } from '@/entities/task.entity';
+import { Task } from '@/entities/task.entity';
 import { OdooService } from '@/external/odoo/odoo.service';
 import { LoggerService } from '@/logger/logger.service';
 import { ConfigService } from '@nestjs/config';
@@ -35,37 +35,41 @@ describe('TasksService', () => {
       module.get<ConfigService>(ConfigService),
       module.get<OdooService>(OdooService),
     );
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  it('list task pagination', async () => {
-    const [data, total] = await service.pagiation({}, { page: 1, limit: 1 });
-    expect(data).toBeInstanceOf(Array);
-    // expect(data.length).toEqual(1);  // TODO should fix mock for pagination
-    expect(total).toEqual(tasksStub().length);
-  });
-
-  it('list all tasks success', async () => {
-    const res = await service.listTasks({});
-    expect(res).toBeInstanceOf(Array<TaskDoc>);
-    expect(res.length).toEqual(tasksStub().length);
-  });
-
-  it('get 1 task success', async () => {
-    const res = await service.getTask({});
-    expect(res).toBeInstanceOf(Object);
-  });
-
-  it('get 1 task empty', async () => {
-    jest.spyOn(mockTaskModel, 'findOne').mockReturnValue({
-      exec: jest.fn().mockResolvedValue(null),
+  describe('listTasks', () => {
+    it('should return all tasks', async () => {
+      const tasks = await service.listTasks({});
+      expect(tasks.length).toEqual(tasksStub().length);
     });
 
-    const res = await service.getTask({});
-    expect(res).toBeNull();
+    it('list task pagination', async () => {
+      const [data, total] = await service.pagiation({}, { page: 1, limit: 1 });
+      expect(data).toBeInstanceOf(Array);
+      // expect(data.length).toEqual(1);  // TODO should fix mock for pagination
+      expect(total).toEqual(tasksStub().length);
+    });
+  });
+
+  describe('getTask', () => {
+    it('get 1 task success', async () => {
+      const res = await service.getTask({});
+      expect(res).toBeInstanceOf(Object);
+    });
+
+    it('get 1 task empty', async () => {
+      jest.spyOn(mockTaskModel, 'findOne').mockReturnValue({
+        exec: jest.fn().mockResolvedValue(null),
+      });
+
+      const res = await service.getTask({});
+      expect(res).toBeNull();
+    });
   });
 
   it('create task success', async () => {
