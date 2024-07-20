@@ -1,4 +1,4 @@
-import { Task } from '@/entities/task.entity';
+import { Task, TaskDoc } from '@/entities/task.entity';
 import { OdooService } from '@/external/odoo/odoo.service';
 import { LoggerService } from '@/logger/logger.service';
 import { ConfigService } from '@nestjs/config';
@@ -57,24 +57,38 @@ describe('TasksService', () => {
   });
 
   describe('getTask', () => {
+    let sample: TaskDoc;
+    beforeEach(async () => {
+      sample = tasksStub()[0];
+    });
+
     it('get 1 task success', async () => {
-      const res = await service.getTask({});
+      const res = await service.getTask({ _id: sample._id.toString() });
       expect(res).toBeInstanceOf(Object);
     });
 
     it('get 1 task empty', async () => {
-      jest.spyOn(mockTaskModel, 'findOne').mockReturnValue({
-        exec: jest.fn().mockResolvedValue(null),
-      });
-
-      const res = await service.getTask({});
+      const res = await service.getTask({ _id: '#null-value' });
       expect(res).toBeNull();
     });
   });
 
-  it('create task success', async () => {
-    const res = await service.createTask(tasksStub()[0]);
-    expect(res).toBeInstanceOf(Object);
-    expect(res.createdAt).toBeDefined();
+  describe('create & update task', () => {
+    let sample: TaskDoc;
+    beforeEach(async () => {
+      sample = tasksStub()[0];
+    });
+    it('create task success', async () => {
+      const newTask = await service.createTask(tasksStub()[0]);
+      expect(newTask).toBeInstanceOf(Object);
+      expect(newTask.createdAt).toBeDefined();
+    });
+
+    it('update task success', async () => {
+      const res = await service.updateTask({ _id: sample._id.toString() }, { model: 'new.model' });
+      expect(res).toBeInstanceOf(Object);
+      expect(res.model).toEqual('new.model');
+      expect(res.updatedAt).toBeDefined();
+    });
   });
 });

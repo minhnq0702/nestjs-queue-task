@@ -5,7 +5,7 @@ const TaskModel = model('Person', TaskSchema);
 export const tasksStub = () => {
   return [
     new TaskModel({
-      _id: new Types.ObjectId(),
+      _id: new Types.ObjectId('669b919ade079547e60e133a'),
       model: 'task.task',
       func: 'create',
       args: '[]',
@@ -15,7 +15,7 @@ export const tasksStub = () => {
       executeUrl: 'http://localhost:8000/api/v1/tasks/execute/',
     }),
     new TaskModel({
-      _id: new Types.ObjectId(),
+      _id: new Types.ObjectId('669b3f046174719aebfd7ba6'),
       model: 'task.task',
       func: 'create',
       args: '[]',

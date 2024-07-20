@@ -10,13 +10,26 @@ export const MockTasksModel = jest.fn().mockImplementation(() => ({
     limit: jest.fn().mockReturnThis(),
     exec: jest.fn().mockResolvedValue(tasksStub()),
   }),
-  findOne: jest.fn().mockReturnValue({
-    exec: jest.fn().mockResolvedValue({}),
-  }),
+  findOne: ({ _id }: { _id: string }) => {
+    const foundTask = tasksStub().find((task) => task._id.toString() === _id) || null;
+    console.log('findOne', _id, foundTask);
+    return {
+      exec: jest.fn().mockReturnValue(foundTask),
+      // exec: () => {
+      //   return tasksStub()[0];
+      // },
+    };
+  },
   sort: jest.fn().mockReturnThis(),
   countDocuments: jest.fn().mockReturnValue(MockCount()),
   // create: jest.fn().mockResolvedValue(tasksStub()[0]),
   create: async (val: TaskDoc) => {
     return val;
+  },
+  findOneAndUpdate: (_: { _id: string }, newTask: TaskDoc) => {
+    newTask.updatedAt = new Date();
+    return {
+      exec: jest.fn().mockResolvedValue(newTask),
+    };
   },
 }));
