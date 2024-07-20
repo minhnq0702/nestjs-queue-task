@@ -75,6 +75,7 @@ export class LoggerService extends Logger {
     if (process.env.NODE_ENV !== 'production') {
       this.logger.add(
         new winston.transports.Console({
+          level: 'silly',
           format: winston.format.combine(
             winston.format.colorize({
               all: true,
