@@ -6042,9 +6042,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nestjs-odoo-queue-task@workspace:.":
+"nestjs-queue-task@workspace:.":
   version: 0.0.0-use.local
-  resolution: "nestjs-odoo-queue-task@workspace:."
+  resolution: "nestjs-queue-task@workspace:."
   dependencies:
     "@nestjs/bull": "npm:^10.1.1"
     "@nestjs/cli": "npm:^10.0.0"
