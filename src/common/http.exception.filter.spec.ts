@@ -1,14 +1,16 @@
 import { NotFound } from '@/entities/error.entity';
+import { LoggerService } from '@/logger/logger.service';
 import { HttpStatus } from '@nestjs/common';
 import AllExceptionFilter from './http.exception.filter';
 
+jest.mock('@/logger/logger.service');
 const mockGetHttpCtx = jest.fn().mockReturnValue({ getResponse: jest.fn() });
 
 describe('TestFilter', () => {
   let filter: AllExceptionFilter;
   let wrap: jest.SpyInstance;
   beforeEach(() => {
-    filter = new AllExceptionFilter({ error: jest.fn() } as any, { httpAdapter: { reply: jest.fn() } } as any);
+    filter = new AllExceptionFilter(new LoggerService(''), { httpAdapter: { reply: jest.fn() } } as any);
     wrap = jest.spyOn(filter, 'WrapError');
     jest.clearAllMocks();
   });
