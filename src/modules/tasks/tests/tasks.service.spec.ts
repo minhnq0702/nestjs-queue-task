@@ -48,7 +48,7 @@ describe('TasksService', () => {
       expect(tasks.length).toEqual(tasksStub().length);
     });
 
-    it('list task pagination', async () => {
+    it('should return tasks pagination', async () => {
       const [data, total] = await taskService.pagiation({}, { page: 1, limit: 1 });
       expect(data).toBeInstanceOf(Array);
       // expect(data.length).toEqual(1);  // TODO should fix mock for pagination

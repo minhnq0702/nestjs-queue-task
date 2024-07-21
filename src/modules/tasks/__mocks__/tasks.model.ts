@@ -18,7 +18,6 @@ export const MockTasksModel = jest.fn().mockImplementation(() => ({
   },
   sort: jest.fn().mockReturnThis(),
   countDocuments: jest.fn().mockReturnValue(MockCount()),
-  // create: jest.fn().mockResolvedValue(tasksStub()[0]),
   create: async (val: TaskDoc) => {
     return val;
   },

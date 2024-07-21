@@ -11,8 +11,8 @@ import { FilterQuery, Model, ProjectionType, UpdateQuery } from 'mongoose';
 @Injectable()
 export class AccountsService {
   constructor(
-    @InjectModel(Account.name) private accModel: Model<Account>,
     private readonly logger: LoggerService,
+    @InjectModel(Account.name) private accModel: Model<Account>,
   ) {}
 
   async pagination(query: FilterQuery<AccountDoc>, paginateQuery: PagiQuery): Promise<PagiRes<AccountDoc>> {
