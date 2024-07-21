@@ -1,6 +1,6 @@
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ClientKafka } from '@nestjs/microservices';
-import { KafkaController } from './kafka.controller';
+import { KafkaController } from '../kafka.controller';
 
 describe('KafkaController', () => {
   let controller: KafkaController;

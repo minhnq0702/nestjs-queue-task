@@ -6,6 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { tasksStub } from '../__mocks__/task.stub';
 import { TasksController } from '../tasks.controller';
 import { TasksService } from '../tasks.service';
+jest.mock('@/logger/logger.service');
 jest.mock('../tasks.service');
 
 describe('TasksController', () => {
