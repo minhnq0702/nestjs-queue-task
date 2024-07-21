@@ -9,7 +9,6 @@ import { TasksService } from '../tasks.service';
 
 export class TaskCronService {
   constructor(
-    // @Inject(forwardRef(() => LoggerService)) private readonly logger: LoggerService,
     @InjectQueue(process.env.ODOO_QUEUE_TASK_CHANNEL) private taskQueue: Queue,
     private readonly logger: LoggerService,
     private readonly config: ConfigService,

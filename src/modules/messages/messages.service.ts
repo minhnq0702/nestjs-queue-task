@@ -1,7 +1,7 @@
 import { paginate, PaginateQuery } from '@/common/paginate/paginate';
 import { MsgNotFound } from '@/entities/error.entity';
 import { Message, MessageDoc, MessageStateEnum } from '@/entities/message.entity';
-import { TwilioService } from '@/external/twilio/sms.service';
+import { TwilioService } from '@/external/sms.service';
 import { LoggerService } from '@/logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';

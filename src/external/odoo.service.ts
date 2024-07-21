@@ -1,7 +1,7 @@
 import { OdooDoingTaskParams } from '@/dto/event/odoo.doing.task.dto';
 import { LoggerService } from '@/logger/logger.service';
 import { Injectable } from '@nestjs/common';
-import odooExecutor from './odoo.executor';
+import odooExecutor from './clients/odoo.executor';
 
 @Injectable()
 export class OdooService {

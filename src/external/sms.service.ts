@@ -11,7 +11,11 @@ export class TwilioService {
   client: Twilio;
 
   constructor(private readonly logger: LoggerService) {
-    logger.debug('Initialize TwilioClient');
+    this.initTwilioClient();
+  }
+
+  private initTwilioClient() {
+    this.logger.debug('Initialize TwilioClient');
     this.client = new Twilio(accountSid, authToken);
     this.client.httpClient.defaultTimeout = 15000;
   }
