@@ -21,8 +21,8 @@ export class TwilioService {
       // const _start = hrtime();
       const msg = await this.client.messages.create(
         {
-          ...sms
-        }
+          ...sms,
+        },
         // (err, message) => {
         //   if (err) {
         //     this.logger.error(`TwilioService.sendSms ${err}`);
