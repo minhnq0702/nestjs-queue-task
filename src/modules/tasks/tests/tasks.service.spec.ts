@@ -1,12 +1,12 @@
 import { Task, TaskDoc } from '@/entities/task.entity';
-import { OdooService } from '@/external/odoo/odoo.service';
+import { OdooService } from '@/external/odoo.service';
 import { LoggerService } from '@/logger/logger.service';
 import { ConfigService } from '@nestjs/config';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
-import { MockTasksModel } from '../__mocks__/mock.tasks.model';
 import { tasksStub } from '../__mocks__/task.stub';
+import { MockTasksModel } from '../__mocks__/tasks.model';
 import { TasksService } from '../tasks.service';
 jest.mock('@/logger/logger.service');
 
@@ -21,13 +21,16 @@ describe('TasksService', () => {
         LoggerService,
         {
           provide: getModelToken(Task.name),
-          useValue: mockTaskModel as unknown as Model<Task>,
+          useValue: Model<Task>,
         },
         ConfigService,
         OdooService,
         TasksService,
       ],
-    }).compile();
+    })
+      .overrideProvider(getModelToken(Task.name))
+      .useValue(mockTaskModel)
+      .compile();
   });
 
   beforeEach(async () => {

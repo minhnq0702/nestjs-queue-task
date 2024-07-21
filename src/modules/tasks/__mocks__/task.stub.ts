@@ -1,7 +1,7 @@
 import { TaskSchema, TaskStateEnum } from '@/entities/task.entity';
 import { model, Types } from 'mongoose';
 
-const TaskModel = model('Person', TaskSchema);
+const TaskModel = model('Tasks', TaskSchema);
 export const tasksStub = () => {
   return [
     new TaskModel({
