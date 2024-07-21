@@ -10,12 +10,7 @@ export default class AllExceptionFilter implements ExceptionFilter {
     private readonly httpAdapterHost: HttpAdapterHost,
   ) {}
 
-  catch(exception: Error, host: ArgumentsHost): void {
-    this.logger.error(`${JSON.stringify(exception)}`, exception.stack, 'ExceptionFilter');
-
-    const { httpAdapter } = this.httpAdapterHost;
-    const ctx = host.switchToHttp();
-
+  WrapError(exception: Error) {
     let code: number = 1;
     let statusCode: number = HttpStatus.INTERNAL_SERVER_ERROR;
     let error: string | object = 'INTERNAL_SERVER_ERROR';
@@ -27,7 +22,7 @@ export default class AllExceptionFilter implements ExceptionFilter {
         statusCode = exception.httpStatus;
         error = exception.error;
         message = (exception.message && [exception.message]) || [];
-        additional = exception.additional;
+        additional = exception.additional || null;
         break;
       case exception instanceof HttpException:
         code = statusCode = exception.getStatus();
@@ -46,16 +41,32 @@ export default class AllExceptionFilter implements ExceptionFilter {
     }
 
     const responseBody = {
+      statusCode,
       code,
       error,
       message,
       timestamp: new Date().toISOString(),
-      // path: httpAdapter.getRequestUrl(ctx.getRequest())
     };
     if (additional !== null) {
       responseBody['additional'] = additional;
     }
 
-    httpAdapter.reply(ctx.getResponse(), responseBody, statusCode);
+    return responseBody;
+  }
+
+  catch(exception: Error, host: ArgumentsHost): void {
+    this.logger.error(`${JSON.stringify(exception)}`, exception.stack, 'ExceptionFilter');
+
+    const { httpAdapter } = this.httpAdapterHost;
+    const ctx = host.switchToHttp();
+    const { statusCode, ...wrappedErr } = this.WrapError(exception);
+    httpAdapter.reply(
+      ctx.getResponse(),
+      {
+        ...wrappedErr,
+        // path: httpAdapter.getRequestUrl(ctx.getRequest()),
+      },
+      statusCode,
+    );
   }
 }

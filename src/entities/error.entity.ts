@@ -5,12 +5,13 @@ export class MyException extends Error {
   code: number;
   error: string | null;
   additional?: object | null;
-  constructor(options?: object | string) {
+  constructor(msg?: string, options?: object) {
     super();
     this.httpStatus = STATUS.INTERNAL_SERVER_ERROR;
-    if (typeof options === 'string') {
-      this.message = options;
-    } else if (typeof options === 'object') {
+    if (msg) {
+      this.message = msg;
+    }
+    if (options !== undefined && options !== null) {
       this.additional = options;
     }
   }
