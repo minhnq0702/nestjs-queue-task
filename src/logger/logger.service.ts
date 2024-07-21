@@ -114,10 +114,7 @@ export class LoggerService extends Logger {
       );
     }
 
-    // if (process.env.NODE_ENV === 'test') {
-    //   return;
-    // }
-    this.debug(`${process.env.NODE_ENV} - Init logger instance`, context);
+    this.debug(`Init logger instance`, context);
   }
 
   log(message: string | object, context?: string) {
