@@ -3,5 +3,6 @@ export const LoggerService = jest.fn().mockImplementation(() => {
     log: jest.fn(),
     error: jest.fn(),
     debug: jest.fn(),
+    warn: jest.fn(),
   };
 });

@@ -16,6 +16,7 @@ const config: Config = {
     'jest.config.ts',
     '/src/main.(ts|js)',
     '/src/app.*.(ts|js)',
+    '.*\\.module.ts',
     'base.entity.ts',
   ],
   coverageDirectory: '../coverage',
