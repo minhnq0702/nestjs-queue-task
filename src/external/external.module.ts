@@ -1,7 +1,7 @@
-import { OdooService } from '@/external/odoo/odoo.service';
+import { OdooService } from '@/external/odoo.service';
+import { TwilioService } from '@/external/sms.service';
 import { LoggerModule } from '@/logger/logger.module';
 import { Module } from '@nestjs/common';
-import { TwilioService } from './twilio/sms.service';
 
 @Module({
   imports: [LoggerModule.register('EXTERNAL')],

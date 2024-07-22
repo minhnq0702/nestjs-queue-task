@@ -2,7 +2,7 @@ import { paginate, PaginateQuery } from '@/common/paginate/paginate';
 import { ODOO_CONFIG } from '@/constants';
 import { TaskNotFound } from '@/entities/error.entity';
 import { Task, TaskDoc, TaskStateEnum } from '@/entities/task.entity';
-import { OdooService } from '@/external/odoo/odoo.service';
+import { OdooService } from '@/external/odoo.service';
 import { LoggerService } from '@/logger/logger.service';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

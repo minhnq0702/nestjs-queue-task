@@ -1,5 +1,5 @@
 import { MessageDoc, MessageStateEnum } from '@/entities/message.entity';
-import { TwilioService } from '@/external/twilio/sms.service';
+import { TwilioService } from '@/external/sms.service';
 import { LoggerService } from '@/logger/logger.service';
 import { TWILIO_QUEUE_MSG_CHANNEL, TWILIO_QUEUE_MSG_CONCURRENCY } from '@/modules/messages/constants';
 import { MessagesService } from '@/modules/messages/messages.service';

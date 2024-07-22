@@ -5,12 +5,15 @@ export class MyException extends Error {
   code: number;
   error: string | null;
   additional?: object | null;
-  constructor(options?: object | string) {
+  constructor(msg?: string, options?: object) {
     super();
     this.httpStatus = STATUS.INTERNAL_SERVER_ERROR;
-    if (typeof options === 'string') {
-      this.message = options;
-    } else if (typeof options === 'object') {
+    this.code = this.httpStatus;
+    this.error = 'INTERNAL_SERVER_ERROR';
+    if (msg) {
+      this.message = msg;
+    }
+    if (options !== undefined && options !== null) {
       this.additional = options;
     }
   }
@@ -49,6 +52,7 @@ export class Conflict extends MyException {
   code = this.httpStatus;
   error = 'CONFLICT';
 }
+
 export class TaskAlreadyExist extends Conflict {
   error = 'TASK_ALREADY_EXIST';
 }

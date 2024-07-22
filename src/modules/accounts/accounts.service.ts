@@ -11,8 +11,8 @@ import { FilterQuery, Model, ProjectionType, UpdateQuery } from 'mongoose';
 @Injectable()
 export class AccountsService {
   constructor(
-    @InjectModel(Account.name) private accModel: Model<Account>,
     private readonly logger: LoggerService,
+    @InjectModel(Account.name) private accModel: Model<Account>,
   ) {}
 
   async pagination(query: FilterQuery<AccountDoc>, paginateQuery: PagiQuery): Promise<PagiRes<AccountDoc>> {
@@ -31,7 +31,7 @@ export class AccountsService {
   async createAccount(account: Account): Promise<AccountDoc> {
     const hashPassword = await this.hashPassword(account.password);
     account.password = hashPassword;
-    return this.accModel.create(account).catch((err: MongoServerError) => {
+    return this.accModel.create(account).catch((err: Error) => {
       if (!(err instanceof MongoServerError)) throw err;
       if (err.code === 11000) {
         // TODO ? should change to exception filter for MongoError
@@ -42,13 +42,17 @@ export class AccountsService {
   }
 
   async updateAccount(filter: FilterQuery<AccountDoc>, updateQuery: UpdateQuery<AccountDoc>): Promise<AccountDoc> {
-    this.accModel.findOneAndUpdate(filter, {
-      ...updateQuery,
-      $currentDate: {
-        updatedAt: true,
+    const res = this.accModel.findOneAndUpdate(
+      filter,
+      {
+        ...updateQuery,
+        $currentDate: {
+          updatedAt: true,
+        },
       },
-    });
-    return null;
+      { new: true },
+    );
+    return res.exec();
   }
 
   async deleteAccountById(accountId: string): Promise<void> {

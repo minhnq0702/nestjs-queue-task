@@ -1,4 +1,4 @@
-import OdooExecutor from '@/external/odoo/odoo.executor';
+import OdooExecutor from '@/external/clients/odoo.executor';
 import { DoneCallback, Job } from 'bull';
 
 export default function (job: Job, cb: DoneCallback) {
@@ -8,7 +8,6 @@ export default function (job: Job, cb: DoneCallback) {
       cb(null, taskDbId);
     })
     .catch((err) => {
-      console.log('co zo day ko 4?');
       cb(err);
     });
 }

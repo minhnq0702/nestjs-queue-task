@@ -11,7 +11,11 @@ export class TwilioService {
   client: Twilio;
 
   constructor(private readonly logger: LoggerService) {
-    logger.debug('Initialize TwilioClient');
+    this.initTwilioClient();
+  }
+
+  private initTwilioClient() {
+    this.logger.debug('Initialize TwilioClient');
     this.client = new Twilio(accountSid, authToken);
     this.client.httpClient.defaultTimeout = 15000;
   }
@@ -21,8 +25,8 @@ export class TwilioService {
       // const _start = hrtime();
       const msg = await this.client.messages.create(
         {
-          ...sms
-        }
+          ...sms,
+        },
         // (err, message) => {
         //   if (err) {
         //     this.logger.error(`TwilioService.sendSms ${err}`);

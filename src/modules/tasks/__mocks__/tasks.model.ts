@@ -12,17 +12,12 @@ export const MockTasksModel = jest.fn().mockImplementation(() => ({
   }),
   findOne: ({ _id }: { _id: string }) => {
     const foundTask = tasksStub().find((task) => task._id.toString() === _id) || null;
-    console.log('findOne', _id, foundTask);
     return {
       exec: jest.fn().mockReturnValue(foundTask),
-      // exec: () => {
-      //   return tasksStub()[0];
-      // },
     };
   },
   sort: jest.fn().mockReturnThis(),
   countDocuments: jest.fn().mockReturnValue(MockCount()),
-  // create: jest.fn().mockResolvedValue(tasksStub()[0]),
   create: async (val: TaskDoc) => {
     return val;
   },

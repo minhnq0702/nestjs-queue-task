@@ -5,7 +5,7 @@ import 'winston-daily-rotate-file';
 
 @Injectable()
 export class LoggerService extends Logger {
-  private readonly logger: winston.Logger;
+  readonly logger: winston.Logger;
 
   constructor(context: string) {
     super(context);
@@ -75,6 +75,7 @@ export class LoggerService extends Logger {
     if (process.env.NODE_ENV !== 'production') {
       this.logger.add(
         new winston.transports.Console({
+          level: 'silly',
           format: winston.format.combine(
             winston.format.colorize({
               all: true,
@@ -113,10 +114,7 @@ export class LoggerService extends Logger {
       );
     }
 
-    // if (process.env.NODE_ENV === 'test') {
-    //   return;
-    // }
-    this.debug(`${process.env.NODE_ENV} - Init logger instance`, context);
+    this.debug(`Init logger instance`, context);
   }
 
   log(message: string | object, context?: string) {
@@ -132,5 +130,11 @@ export class LoggerService extends Logger {
 
   debug(message: string, context?: string) {
     this.logger.debug(message, { context: context ?? this.context });
+  }
+
+  warn(message: any, context?: string): void;
+  warn(message: any, ...optionalParams: [...any, string?]): void;
+  warn(message: string, context?: string, ...metadata: any[]): void {
+    this.logger.warn(message, { context: context ?? this.context }, ...metadata);
   }
 }
