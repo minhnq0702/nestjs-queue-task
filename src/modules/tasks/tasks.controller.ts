@@ -7,6 +7,7 @@ import { LoggerService } from '@/logger/logger.service';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -58,6 +59,12 @@ export class TasksController {
       throw new TaskNotFound(`Task with id ${id.toString()} not found`);
     }
     return task;
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async ctrlDeleteTaskById(@Param('id') id: string) {
+    return this.tasksService.deleteTaskById(id);
   }
 
   @Post(':id/execute')

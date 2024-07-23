@@ -52,6 +52,10 @@ export class TasksService {
     return res.exec();
   }
 
+  async deleteTaskById(taskId: string): Promise<void> {
+    await this.taskModel.deleteOne({ _id: taskId });
+  }
+
   /** Execute task: Request to external service to execute queued task (Odoo, etc..) */
   async executeTaskDirectly(taskId: string): Promise<TaskDoc> {
     // * Only allow find and execute task with state DRAFT
