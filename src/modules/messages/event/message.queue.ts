@@ -33,7 +33,7 @@ export class MessageQueueProcessor {
   async onCompletedTask(job: Job<MessageDoc>, result: string) {
     // this.logger.log(`[${process.pid}] Job completed ${job.id} - ${result}`);
     await this.msgSvc.updateMsgs(
-      { id: job.data._id.toString() },
+      { _id: job.data._id.toString() },
       {
         state: MessageStateEnum.QUEUED,
         providerId: result,
@@ -56,13 +56,13 @@ export class MessageQueueProcessor {
       error.message.startsWith('Client network socket disconnected before secure')
     ) {
       await this.msgSvc.updateMsgs(
-        { id: job.data._id.toString() },
+        { _id: job.data._id.toString() },
         { state: MessageStateEnum.DRAFT, failReason: error.message },
       );
       return;
     } else {
       this.msgSvc.updateMsgs(
-        { id: job.data._id.toString() },
+        { _id: job.data._id.toString() },
         { state: MessageStateEnum.FAILED, failReason: error.message },
       );
     }

@@ -30,7 +30,7 @@ export class MessageCronService {
     return this.msgSvc
       .updateMsgs(
         {
-          id: { $in: msgs.map((msg) => msg._id.toString()) },
+          _id: { $in: msgs.map((msg) => msg._id.toString()) },
         },
         {
           state: MessageStateEnum.READY,
