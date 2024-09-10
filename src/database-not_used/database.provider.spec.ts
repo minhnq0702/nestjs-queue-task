@@ -6,7 +6,7 @@ describe('Database', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [DatabaseProvider]
+      providers: [DatabaseProvider],
     }).compile();
 
     provider = module.get<DatabaseProvider>(DatabaseProvider);
