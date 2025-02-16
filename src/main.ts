@@ -44,8 +44,9 @@ async function bootstrap() {
   app.setGlobalPrefix('/api');
   app.enableCors({
     origin: [
-      '*', // TODO remove *
+      'https://minhnq0702.github.io',
       'http://localhost:8080',
+      '*', // TODO remove *
     ],
     credentials: true,
   });
