@@ -25,7 +25,7 @@ export const checkPaginatedResp = <T>(data: any): data is PaginateResponse<T> =>
 export const paginate = <T, M>(model: Model<M>, query: FilterQuery<T>, paginateQuery: PaginateQuery) => {
   const res = model.find<T>(query);
 
-  const skip = ((paginateQuery.page ?? 1) - 1) * paginateQuery.limit ?? 0;
+  const skip = ((paginateQuery.page ?? 1) - 1) * (paginateQuery.limit ?? 0);
 
   return Promise.all([
     res
